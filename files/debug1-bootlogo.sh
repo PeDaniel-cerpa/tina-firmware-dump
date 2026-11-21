@@ -1,8 +1,12 @@
 #!/bin/sh
 # ==============================================================================
-# debug1 v3 - ejecutado como root desde /mnt/extsd al arrancar
+# debug1 v4 - ejecutado como root desde /mnt/extsd al arrancar
 # Igual que debug1 v2, pero SI hay /mnt/extsd/bootlogo.bin lo graba en la
 # particion bootlogo (mtdblock5) antes de levantar telnetd.
+#
+# Cambio v4: la comprobacion de tamano con wc fallaba en este firmware
+# (devolvia cadena vacia). Ahora se usa MD5 como unica verificacion, que ademas
+# es mas fuerte. Se anaden lineas de diagnostico al log.
 #
 # Uso:
 #   - copiar este archivo a la SD con el nombre exacto "debug1" (sin extension)
@@ -10,7 +14,7 @@
 #   - arrancar la pantalla con la SD puesta
 #   - al terminar, leer F:\debug1.log desde el PC
 #
-# El archivo F:\bootlogo.done se crea solo cuando la escritura verifico bien.
+# El archivo F:\bootlogo.done se crea solo cuando la verificacion MD5 es OK.
 # Borralo si quieres volver a grabar el logo en otro arranque.
 #
 # IMPORTANTE: LF (UNIX), no CRLF. Se ejecuta de forma sincronica desde S01app.
@@ -59,11 +63,23 @@ done
 
 # --- 4) Grabar el bootlogo desde la SD ----------------------------------------
 if [ -f "$IMG" ] && [ ! -f "$FLAG" ]; then
-    cp "$IMG" /tmp/bootlogo.bin 2>/dev/null
-    SIZE=$(wc -c < /tmp/bootlogo.bin 2>/dev/null | tr -d '[:space:]')
+    log "bootlogo.bin encontrado; copiando a /tmp"
 
-    if [ "$SIZE" != "131072" ]; then
-        log "ERROR: bootlogo.bin mide '$SIZE' bytes, se esperaban 131072. No se grabo nada."
+    # cat en vez de cp: evita problemas de cp con destinos ya existentes
+    cat "$IMG" > /tmp/bootlogo.bin 2>>"$LOG"
+
+    # Diagnostico (no es fatal si alguna herramienta no existe)
+    log "diag ls  : $(ls -l /tmp/bootlogo.bin 2>&1)"
+    log "diag stat: $(stat -c %s /tmp/bootlogo.bin 2>&1)"
+    log "diag md5 : $(md5sum /tmp/bootlogo.bin 2>&1)"
+
+    A=$(md5sum "$IMG" 2>/dev/null | awk '{print $1}')
+    C=$(md5sum /tmp/bootlogo.bin 2>/dev/null | awk '{print $1}')
+    log "MD5 SD   : $A"
+    log "MD5 /tmp : $C"
+
+    if [ -z "$A" ] || [ "$A" != "$C" ]; then
+        log "ERROR: no se pudo copiar bootlogo.bin a /tmp. No se grabo nada."
     else
         if [ -e /dev/mtd_name/bootlogo ]; then
             TGT=/dev/mtd_name/bootlogo
@@ -76,12 +92,11 @@ if [ -f "$IMG" ] && [ ! -f "$FLAG" ]; then
         dd if=/tmp/bootlogo.bin of="$TGT" bs=1024 count=128 >> "$LOG" 2>&1
         sync
 
-        A=$(md5sum /tmp/bootlogo.bin 2>/dev/null | awk '{print $1}')
         B=$(md5sum "$TGT" 2>/dev/null | awk '{print $1}')
         log "MD5 esperado: $A"
         log "MD5 leido   : $B"
 
-        if [ -n "$A" ] && [ "$A" = "$B" ]; then
+        if [ -n "$B" ] && [ "$A" = "$B" ]; then
             log "BOOTLOGO GRABADO Y VERIFICADO"
             echo ok > "$FLAG" 2>/dev/null
             log "creado $FLAG (borralo para repetir la grabacion)"
