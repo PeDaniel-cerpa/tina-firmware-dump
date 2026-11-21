@@ -245,3 +245,33 @@ The practical levers are:
 3. The overlay — for small persistent file replacements.
 4. XML flags — only if the app accepts them and the hardware is actually enabled.
 5. Rebuilding `mtdblock2` + DTB — for real feature changes.
+
+---
+
+## 10. Practical example: changing the AP SSID
+
+The XML is only the default. The **actual SSID lives in `/data/param.bin`**, as fixed 64-byte string slots:
+
+```text
+offset 1880: Hunk125r          (device/BT name)
+offset 1944: M750BT_           (BT prefix)
+offset 2072: english           (language)
+offset 2136: M750-60811d4b     <- FULL AP SSID (prefix + MAC suffix)
+offset 2200: M750-             <- AP SSID prefix
+offset 2264: 12345678          <- AP password
+offset 2328: zlink             <- station SSID
+```
+
+That explains why the factory network appears as `M750-xxxx`: `sdvcam` takes the prefix at offset 2200 and appends the last bytes of the `wlan0` MAC (written to `/tmp/apmac.txt` by `etc/firmware/apmac.sh`).
+
+To set an exact SSID such as `Hunk-125r`, patch **both** slots 2136 and 2200 and also the two XML keys (`wifi_ap_ssid`, `wifiApSsid`). Use [`files/debug1-wifi-ssid.sh`](../files/debug1-wifi-ssid.sh) with these files in the SD root:
+
+```text
+F:\debug1                     <- the SSID script renamed to debug1
+F:\param_hunk.bin             <- patched param.bin
+F:\config_devmng_hunk.xml     <- patched XML
+```
+
+The script saves `param.bin.bak` and `config_devmng.xml.bak` on the SD, copies the files to `/data` and `/overlay/upper/data`, dumps `/tmp/apmac.txt` into `firmware_dump/`, and creates `wifi_ssid.done`. Since `S01app` runs `debug1` **before** starting `sdvcam`, the app reads the new values at startup.
+
+**Rollback:** restore the `.bak` files to their original names, delete `wifi_ssid.done` and boot once.

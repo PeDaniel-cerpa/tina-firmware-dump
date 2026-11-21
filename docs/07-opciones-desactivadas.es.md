@@ -245,3 +245,33 @@ Las palancas reales son:
 3. El overlay — para sustituciones pequeñas de archivos de forma persistente.
 4. Los flags XML — solo si la app los acepta y el hardware esta realmente habilitado.
 5. Reconstruir `mtdblock2` + DTB — para cambios reales de funcionalidad.
+
+---
+
+## 10. Ejemplo practico: cambiar el SSID del AP
+
+El XML es solo el valor por defecto. El **SSID real esta en `/data/param.bin`**, en slots de cadena de 64 bytes:
+
+```text
+offset 1880: Hunk125r          (nombre del equipo / BT)
+offset 1944: M750BT_           (prefijo Bluetooth)
+offset 2072: english           (idioma)
+offset 2136: M750-60811d4b     <- SSID COMPLETO del AP (prefijo + sufijo MAC)
+offset 2200: M750-             <- prefijo del SSID del AP
+offset 2264: 12345678          <- password del AP
+offset 2328: zlink             <- SSID de estacion
+```
+
+Por eso la red de fabrica sale como `M750-xxxx`: `sdvcam` toma el prefijo del offset 2200 y le añade los ultimos bytes de la MAC de `wlan0` (escritos en `/tmp/apmac.txt` por `etc/firmware/apmac.sh`).
+
+Para poner un SSID exacto como `Hunk-125r` hay que parchear **los dos slots** 2136 y 2200, ademas de las dos claves del XML (`wifi_ap_ssid` y `wifiApSsid`). Usa [`files/debug1-wifi-ssid.sh`](../files/debug1-wifi-ssid.sh) con estos archivos en la raiz de la SD:
+
+```text
+F:\debug1                     <- el script de SSID renombrado a debug1
+F:\param_hunk.bin             <- param.bin parcheado
+F:\config_devmng_hunk.xml     <- XML parcheado
+```
+
+El script guarda `param.bin.bak` y `config_devmng.xml.bak` en la SD, copia los archivos a `/data` y `/overlay/upper/data`, vuelca `/tmp/apmac.txt` a `firmware_dump/` y crea `wifi_ssid.done`. Como `S01app` ejecuta `debug1` **antes** de arrancar `sdvcam`, la app lee los valores nuevos al iniciarse.
+
+**Rollback:** restaura los `.bak` a sus nombres originales, borra `wifi_ssid.done` y arranca una vez.
