@@ -38,6 +38,7 @@ A practical, hardware-tested guide that uses an existing boot hook in `/etc/init
 | [03 - Files](docs/03-files.md) | The files used, what they do and where they came from |
 | [04 - Troubleshooting](docs/04-troubleshooting.md) | Every failure encountered and how it was fixed |
 | [05 - Screen comparison](docs/05-screen-analysis.md) | TF811 vs M750: differences and warnings |
+| [06 - Modifying images](docs/06-modify-images.md) | Change the boot logo, backgrounds and icons |
 
 ---
 
@@ -108,6 +109,7 @@ F:\
 | [`files/README.txt`](files/README.txt) | 2.6 KB | Original instructions copied to the SD |
 | [`scripts/make_sd_image.sh`](scripts/make_sd_image.sh) | - | Creates the FAT32 superfloppy image |
 | [`scripts/write_sd_windows.ps1`](scripts/write_sd_windows.ps1) | - | Writes the image to disk (Windows, self-elevating) |
+| [`scripts/make_bootlogo.sh`](scripts/make_bootlogo.sh) | - | Converts your image into a valid 854x480 bootlogo |
 
 SHA256 checksums and upstream URLs: [docs/03-files.md](docs/03-files.md).
 

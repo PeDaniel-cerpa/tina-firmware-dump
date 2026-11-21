@@ -25,6 +25,7 @@ Todo se apoya en un unico "gancho" que ya trae el firmware: `/etc/init.d/S01app`
 | [03 - Archivos](docs/03-files.es.md) | Los archivos usados, que hacen y de donde salieron |
 | [04 - Solucion de problemas](docs/04-troubleshooting.es.md) | Todos los fallos encontrados y como se resolvieron |
 | [05 - Analisis de las dos pantallas](docs/05-screen-analysis.es.md) | TF811 vs M750: diferencias y advertencias |
+| [06 - Modificar imagenes](docs/06-modificar-imagenes.es.md) | Cambiar el logo de arranque, fondos e iconos |
 
 ---
 
@@ -95,6 +96,7 @@ F:\
 | [`files/README.txt`](files/README.txt) | 2.6 KB | Instrucciones originales que se copiaron a la SD |
 | [`scripts/make_sd_image.sh`](scripts/make_sd_image.sh) | - | Crea la imagen FAT32 superfloppy |
 | [`scripts/write_sd_windows.ps1`](scripts/write_sd_windows.ps1) | - | Escribe la imagen en el disco ( Windows, eleva automaticamente) |
+| [`scripts/make_bootlogo.sh`](scripts/make_bootlogo.sh) | - | Convierte tu imagen en un bootlogo valido de 854x480 |
 
 Checksums SHA256 y URLs de origen: [docs/03-files.es.md](docs/03-files.es.md).
 
