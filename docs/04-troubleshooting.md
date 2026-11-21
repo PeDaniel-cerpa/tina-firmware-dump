@@ -221,6 +221,29 @@ cat /proc/mtd
 
 ---
 
+## 13. `bootlogo.bin mide '' bytes` / bootlogo is not flashed
+
+**Symptom:** the log shows:
+
+```text
+[debug1] ERROR: bootlogo.bin mide '' bytes, se esperaban 131072. No se grabo nada.
+```
+
+and `bootlogo.done` is never created.
+
+**Cause:** the `wc -c` applet of the firmware shell returned an empty string in this build, so the numeric size check aborted before writing. This is a quirk of that BusyBox/musl build, not a problem with the image.
+
+**Fix:** use [`files/debug1-bootlogo.sh`](../files/debug1-bootlogo.sh) **v4 or newer**. It no longer uses `wc`: it copies with `cat` and validates using MD5 of the SD file, the `/tmp` copy and the flashed partition. `bootlogo.done` is created only when all three match.
+
+**Verified result:** after a successful run, the next boot dumps `firmware_dump/mtdblock5.bin` with the same MD5 as `bootlogo.bin`:
+
+```text
+5d7c6901b7d905d614c97f7e4585aa3c  firmware_dump/mtdblock5.bin
+5d7c6901b7d905d614c97f7e4585aa3c  bootlogo.bin
+```
+
+---
+
 ## Quick decision tree
 
 ```text
@@ -230,5 +253,6 @@ Is there a debug1.log on the SD?
     ├── "symbol not found" error? -> problem 3 (use busybox_net)
     ├── "cp: can't create symlink"? -> problem 2 (cp -RpL)
     ├── Says "telnetd ACTIVE" but no connection? -> problem 4 / 5 / 10
+    ├── "bootlogo.bin mide '' bytes"? -> problem 13 (use debug1-bootlogo.sh v4+)
     └── All OK? -> you already have the firmware in firmware_dump/
 ```

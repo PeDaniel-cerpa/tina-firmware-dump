@@ -221,6 +221,29 @@ cat /proc/mtd
 
 ---
 
+## 13. `bootlogo.bin mide '' bytes` / no se graba el bootlogo
+
+**Sintoma:** el log muestra:
+
+```text
+[debug1] ERROR: bootlogo.bin mide '' bytes, se esperaban 131072. No se grabo nada.
+```
+
+y nunca se crea `bootlogo.done`.
+
+**Causa:** el applet `wc -c` del shell del firmware devolvió una cadena vacía en este build, por lo que la comprobación numérica abortaba antes de escribir. Es una peculiaridad de ese BusyBox/musl, no un problema de la imagen.
+
+**Solución:** usar [`files/debug1-bootlogo.sh`](../files/debug1-bootlogo.sh) **v4 o posterior**. Ya no usa `wc`: copia con `cat` y valida mediante MD5 del archivo en la SD, de la copia en `/tmp` y de la partición grabada. `bootlogo.done` se crea solo cuando los tres coinciden.
+
+**Resultado verificado:** tras una ejecución correcta, el siguiente arranque vuelca `firmware_dump/mtdblock5.bin` con el mismo MD5 que `bootlogo.bin`:
+
+```text
+5d7c6901b7d905d614c97f7e4585aa3c  firmware_dump/mtdblock5.bin
+5d7c6901b7d905d614c97f7e4585aa3c  bootlogo.bin
+```
+
+---
+
 ## Arbol de decision rapido
 
 ```text
@@ -230,5 +253,6 @@ cat /proc/mtd
     ├── ¿Aparece error "symbol not found"? -> problema 3 (usar busybox_net)
     ├── ¿Aparece "cp: can't create symlink"? -> problema 2 (cp -RpL)
     ├── ¿Dice "telnetd ACTIVO" pero no conecta? -> problema 4 / 5 / 10
+    ├── ¿"bootlogo.bin mide '' bytes"? -> problema 13 (usar debug1-bootlogo.sh v4+)
     └── ¿Todo OK? -> ya tienes el firmware en firmware_dump/
 ```
