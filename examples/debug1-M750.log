@@ -1,0 +1,31 @@
+[debug1] === INICIO Thu Jan  1 00:00:05 UTC 1970 ===
+[debug1] info.txt listo
+[debug1] volcando /dev/mtdblock0
+6+0 records in
+6+0 records out
+[debug1] volcando /dev/mtdblock1
+35+0 records in
+35+0 records out
+[debug1] volcando /dev/mtdblock2
+203+0 records in
+203+0 records out
+[debug1] volcando /dev/mtdblock3
+5+0 records in
+5+0 records out
+[debug1] volcando /dev/mtdblock4
+2+0 records in
+2+0 records out
+[debug1] volcando /dev/mtdblock5
+2+0 records in
+2+0 records out
+[debug1] volcando /dev/mtdblock6
+1+0 records in
+1+0 records out
+[debug1] volcando /dev/mtdblock7
+2+0 records in
+2+0 records out
+[debug1] copiando /etc
+[debug1] copiando /overlay
+[debug1] copiando /data
+[debug1] telnetd ACTIVO en puerto 23 -> Tera Term: 192.168.10.1:23
+[debug1] === FIN Thu Jan  1 00:00:11 UTC 1970 ===

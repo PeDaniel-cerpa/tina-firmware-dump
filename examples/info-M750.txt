@@ -1,0 +1,48 @@
+FECHA: Thu Jan  1 00:00:05 UTC 1970
+CMDLINE: earlyprintk=sunxi-uart,0x02500000 clk_ignore_unused initcall_debug=0 console= loglevel=0 root=/dev/mtdblock2 rootwait init=/pseudo_init rdinit=/rdinit partitions=boot@mtdblock1:rootfs@mtdblock2:rootfs_data@mtdblock3:env@mtdblock4:bootlogo@mtdblock5:private@mtdblock6:UDISK@mtdblock7 cma= coherent_pool=32K ion_carveout_list= androidboot.hardware=sun8iw21p1 boot_type=3 androidboot.boot_type=3 gpt=1 uboot_message=2018.07-g7572878-dirty(06/15/2026-06:26:11) mbr_offset=376832 disp_reserve=1639734,0x43f4a8b6 bootreason=usb androidboot.dramfreq=648 androidboot.dramsize=128 
+--- /proc/mtd ---
+dev:    size   erasesize  name
+mtd0: 00060000 00010000 "uboot"
+mtd1: 00230000 00010000 "boot"
+mtd2: 00cb0000 00010000 "rootfs"
+mtd3: 00050000 00010000 "rootfs_data"
+mtd4: 00020000 00010000 "env"
+mtd5: 00020000 00010000 "bootlogo"
+mtd6: 00010000 00010000 "private"
+mtd7: 00020000 00010000 "UDISK"
+--- partitions ---
+major minor  #blocks  name
+
+  31        0        384 mtdblock0
+  31        1       2240 mtdblock1
+  31        2      12992 mtdblock2
+  31        3        320 mtdblock3
+  31        4        128 mtdblock4
+  31        5        128 mtdblock5
+  31        6         64 mtdblock6
+  31        7        128 mtdblock7
+ 179        0    3932160 mmcblk0
+--- mounts ---
+/dev/root /rom squashfs ro,relatime 0 0
+devtmpfs /dev devtmpfs rw,relatime,size=59200k,nr_inodes=14800,mode=755 0 0
+/proc /proc proc rw,relatime 0 0
+tmpfs /tmp tmpfs rw,relatime 0 0
+sys /sys sysfs rw,relatime 0 0
+/dev/by-name/rootfs_data /overlay jffs2 rw,relatime 0 0
+overlayfs:/overlay / overlay rw,noatime,lowerdir=/,upperdir=/overlay/upper,workdir=/overlay/workdir 0 0
+tmpfs /run tmpfs rw,relatime 0 0
+devpts /dev/pts devpts rw,relatime,gid=5,mode=620,ptmxmode=000 0 0
+/dev/mmcblk0 /mnt/extsd vfat rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,utf8,errors=remount-ro 0 0
+--- ifconfig ---
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1 
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+--- route ---
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface

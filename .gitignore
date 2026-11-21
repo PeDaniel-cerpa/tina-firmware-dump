@@ -1,0 +1,15 @@
+# Imagenes generadas y volcados
+*.img
+firmware_dump/
+firmware_dumps/
+
+# Logs
+*.log
+
+# SO / editores
+.DS_Store
+Thumbs.db
+*.swp
+
+# Excepcion: logs de ejemplo si se versionan
+!examples/*.log
