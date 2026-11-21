@@ -40,6 +40,7 @@ A practical, hardware-tested guide that uses an existing boot hook in `/etc/init
 | [05 - Screen comparison](docs/05-screen-analysis.md) | TF811 vs M750: differences and warnings |
 | [06 - Modifying images](docs/06-modify-images.md) | Change the boot logo, backgrounds and icons |
 | [07 - Disabled features](docs/07-disabled-features.md) | Disabled services, missing binaries, XML flags and DTB nodes |
+| [08 - Change UI colours](docs/08-change-ui-colors.md) | Turn the green menu red, including `image.bin.lzma` and the GPS sequence |
 
 ---
 
@@ -106,6 +107,7 @@ F:\
 | [`files/debug1`](files/debug1) | 2 KB | Main script: dumps MTD, copies config and starts telnetd |
 | [`files/debug1-bootlogo.sh`](files/debug1-bootlogo.sh) | 4 KB | Same, plus flashes `bootlogo.bin` from the SD automatically |
 | [`files/debug1-wifi-ssid.sh`](files/debug1-wifi-ssid.sh) | 4 KB | Changes the AP SSID from `param.bin` + XML from the SD |
+| [`files/debug1-ui-red.sh`](files/debug1-ui-red.sh) | 3 KB | Applies the red UI theme from the SD |
 | [`files/busybox_net`](files/busybox_net) | 1.1 MB | Static ARMv7 BusyBox 1.31 with `telnetd` applet |
 | [`files/debug1-v1-socat.sh`](files/debug1-v1-socat.sh) | 2 KB | Original version (socat attempt, **does not work**: see doc 04) |
 | [`files/socat`](files/socat) | 205 KB | Binary that failed due to musl time64 ABI (kept as reference) |
@@ -113,6 +115,8 @@ F:\
 | [`scripts/make_sd_image.sh`](scripts/make_sd_image.sh) | - | Creates the FAT32 superfloppy image |
 | [`scripts/write_sd_windows.ps1`](scripts/write_sd_windows.ps1) | - | Writes the image to disk (Windows, self-elevating) |
 | [`scripts/make_bootlogo.sh`](scripts/make_bootlogo.sh) | - | Converts your image into a valid 854x480 bootlogo |
+| [`scripts/make_bootlogo_fill.sh`](scripts/make_bootlogo_fill.sh) | - | Crop-to-fill variant for wide images |
+| [`scripts/recolor_ui.py`](scripts/recolor_ui.py) | - | Recolors the green UI resources (XML + images + `image.bin.lzma`) |
 
 SHA256 checksums and upstream URLs: [docs/03-files.md](docs/03-files.md).
 

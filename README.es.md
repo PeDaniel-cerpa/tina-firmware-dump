@@ -27,6 +27,7 @@ Todo se apoya en un unico "gancho" que ya trae el firmware: `/etc/init.d/S01app`
 | [05 - Analisis de las dos pantallas](docs/05-screen-analysis.es.md) | TF811 vs M750: diferencias y advertencias |
 | [06 - Modificar imagenes](docs/06-modificar-imagenes.es.md) | Cambiar el logo de arranque, fondos e iconos |
 | [07 - Opciones desactivadas](docs/07-opciones-desactivadas.es.md) | Servicios desactivados, binarios ausentes, flags XML y nodos DTB |
+| [08 - Cambiar colores de la interfaz](docs/08-cambiar-colores-interfaz.es.md) | Pasar el menú verde a rojo, incluido `image.bin.lzma` y la secuencia GPS |
 
 ---
 
@@ -93,6 +94,7 @@ F:\
 | [`files/debug1`](files/debug1) | 2 KB | Script principal: vuelca MTD, copia configuracion y levanta telnetd |
 | [`files/debug1-bootlogo.sh`](files/debug1-bootlogo.sh) | 4 KB | Igual, pero graba `bootlogo.bin` desde la SD automaticamente |
 | [`files/debug1-wifi-ssid.sh`](files/debug1-wifi-ssid.sh) | 4 KB | Cambia el SSID del AP desde `param.bin` + XML usando la SD |
+| [`files/debug1-ui-red.sh`](files/debug1-ui-red.sh) | 3 KB | Aplica el tema rojo de la interfaz desde la SD |
 | [`files/busybox_net`](files/busybox_net) | 1.1 MB | BusyBox 1.31 estatico ARMv7 con applet `telnetd` |
 | [`files/debug1-v1-socat.sh`](files/debug1-v1-socat.sh) | 2 KB | Version original (intento con socat, **no funciona**: ver doc 04) |
 | [`files/socat`](files/socat) | 205 KB | Binario que fallo por ABI time64 de musl (se conserva como referencia) |
@@ -100,6 +102,8 @@ F:\
 | [`scripts/make_sd_image.sh`](scripts/make_sd_image.sh) | - | Crea la imagen FAT32 superfloppy |
 | [`scripts/write_sd_windows.ps1`](scripts/write_sd_windows.ps1) | - | Escribe la imagen en el disco ( Windows, eleva automaticamente) |
 | [`scripts/make_bootlogo.sh`](scripts/make_bootlogo.sh) | - | Convierte tu imagen en un bootlogo valido de 854x480 |
+| [`scripts/make_bootlogo_fill.sh`](scripts/make_bootlogo_fill.sh) | - | Variante con recorte para imagenes panoramicas |
+| [`scripts/recolor_ui.py`](scripts/recolor_ui.py) | - | Recolorrea los recursos verdes (XML + imagenes + `image.bin.lzma`) |
 
 Checksums SHA256 y URLs de origen: [docs/03-files.es.md](docs/03-files.es.md).
 
