@@ -35,6 +35,7 @@ Todo se apoya en un unico "gancho" que ya trae el firmware: `/etc/init.d/S01app`
 | [11 - Volcado UART Podofo A4628](docs/11-volcado-podofo-a4628-uart.es.md) | Paso crítico: volcado por U-Boot + consola Linux de la unidad abierta (SPI NOR 16 MiB) |
 | [12 - Auditoría DTB y flags offline](docs/12-auditoria-dtb-y-flags.es.md) | Los 48 nodos DTB desactivados, interruptores de la UI y flags de `config_devmng.xml` desde el firmware extraído |
 | [13 - Opciones ocultas de la UI](docs/13-opciones-ocultas-ui.es.md) | 30 ajustes comentados, controles ocultos, flags de la app y panel de fábrica/depuración |
+| [14 - Módulo GPS esperado](docs/14-modulo-gps-esperado.es.md) | GPS NMEA 0183 UART a 9600 en PE6/PE7; cableado y bloqueos de software |
 
 ---
 
