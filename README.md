@@ -47,6 +47,7 @@ A practical, hardware-tested guide that uses an existing boot hook in `/etc/init
 | [10 - Overlay whiteouts after flash](docs/10-overlay-whiteouts-after-flash.md) | Fix missing images caused by overlayfs whiteouts after flashing |
 | [11 - Podofo A4628 UART dump](docs/11-podofo-a4628-uart-dump.md) | Critical baseline: U-Boot + Linux console dump of the opened unit (16 MiB SPI NOR) |
 | [12 - Offline DTB and flags audit](docs/12-offline-dtb-and-flags-audit.md) | All 48 disabled DTB nodes, UI switches and `config_devmng.xml` flags, analysed from the extracted firmware |
+| [13 - Hidden UI options](docs/13-hidden-ui-options.md) | 30 commented settings items, hidden in-page controls, app flags and factory/debug overlay |
 
 ---
 

@@ -34,6 +34,7 @@ Todo se apoya en un unico "gancho" que ya trae el firmware: `/etc/init.d/S01app`
 | [10 - Whiteouts del overlay tras grabar](docs/10-whiteouts-overlay-tras-grabar.es.md) | Solucionar la falta de imágenes causada por whiteouts de overlayfs |
 | [11 - Volcado UART Podofo A4628](docs/11-volcado-podofo-a4628-uart.es.md) | Paso crítico: volcado por U-Boot + consola Linux de la unidad abierta (SPI NOR 16 MiB) |
 | [12 - Auditoría DTB y flags offline](docs/12-auditoria-dtb-y-flags.es.md) | Los 48 nodos DTB desactivados, interruptores de la UI y flags de `config_devmng.xml` desde el firmware extraído |
+| [13 - Opciones ocultas de la UI](docs/13-opciones-ocultas-ui.es.md) | 30 ajustes comentados, controles ocultos, flags de la app y panel de fábrica/depuración |
 
 ---
 
