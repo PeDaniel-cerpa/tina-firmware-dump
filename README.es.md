@@ -26,6 +26,7 @@ Todo se apoya en un unico "gancho" que ya trae el firmware: `/etc/init.d/S01app`
 | [04 - Solucion de problemas](docs/04-troubleshooting.es.md) | Todos los fallos encontrados y como se resolvieron |
 | [05 - Analisis de las dos pantallas](docs/05-screen-analysis.es.md) | TF811 vs M750: diferencias y advertencias |
 | [06 - Modificar imagenes](docs/06-modificar-imagenes.es.md) | Cambiar el logo de arranque, fondos e iconos |
+| [07 - Opciones desactivadas](docs/07-opciones-desactivadas.es.md) | Servicios desactivados, binarios ausentes, flags XML y nodos DTB |
 
 ---
 

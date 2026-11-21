@@ -39,6 +39,7 @@ A practical, hardware-tested guide that uses an existing boot hook in `/etc/init
 | [04 - Troubleshooting](docs/04-troubleshooting.md) | Every failure encountered and how it was fixed |
 | [05 - Screen comparison](docs/05-screen-analysis.md) | TF811 vs M750: differences and warnings |
 | [06 - Modifying images](docs/06-modify-images.md) | Change the boot logo, backgrounds and icons |
+| [07 - Disabled features](docs/07-disabled-features.md) | Disabled services, missing binaries, XML flags and DTB nodes |
 
 ---
 
