@@ -49,6 +49,7 @@ A practical, hardware-tested guide that uses an existing boot hook in `/etc/init
 | [12 - Offline DTB and flags audit](docs/12-offline-dtb-and-flags-audit.md) | All 48 disabled DTB nodes, UI switches and `config_devmng.xml` flags, analysed from the extracted firmware |
 | [13 - Hidden UI options](docs/13-hidden-ui-options.md) | 30 commented settings items, hidden in-page controls, app flags and factory/debug overlay |
 | [14 - Expected GPS module](docs/14-expected-gps-module.md) | NMEA 0183 UART GPS at 9600 baud on PE6/PE7; wiring and software blockers |
+| [15 - Bluetooth GPS with ESP32](docs/15-bluetooth-gps-with-esp32.md) | Why SPP is not supported, and working ESP32 UART alternatives to ttyS0/ttyS1 |
 
 ---
 
