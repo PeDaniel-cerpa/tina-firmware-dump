@@ -95,6 +95,12 @@ apaga y enciende
 
 Después restaura el `debug1` que prefieras desde los respaldos de la SD.
 
+### Sin imágenes después del primer arranque
+
+Si el sistema arranca pero la interfaz no muestra imágenes, los `rm -f` sobre `/data/...` del script de grabación crearon **whiteouts** en la capa superior del overlay. Esos whiteouts ocultan los archivos que ahora están dentro del squashfs reconstruido. No se arregla copiando archivos a `/data`; hay que borrar los whiteouts de `/overlay/upper`.
+
+Copia [`files/debug1-fix-overlay-whiteouts.sh`](../files/debug1-fix-overlay-whiteouts.sh) como `debug1`, arranca una vez con la SD, espera ~20 s, apaga, revisa `debug1.log` y enciende **sin** SD. El script borra solo los 10 whiteouts e imprime los MD5 de los archivos que quedan visibles.
+
 ---
 
 ## 5. Reconstruir con otras imágenes

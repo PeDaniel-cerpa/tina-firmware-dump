@@ -95,6 +95,12 @@ power cycle
 
 After that, restore your preferred `debug1` from the SD backups.
 
+### Images missing after the first boot
+
+If the system boots but the UI has no images, the flash script's `rm -f` on `/data/...` created **whiteouts** in the overlay upperdir. Those whiteouts hide the files that are now inside the rebuilt squashfs. They are not fixed by copying files back to `/data`; they must be deleted from `/overlay/upper` directly.
+
+Copy [`files/debug1-fix-overlay-whiteouts.sh`](../files/debug1-fix-overlay-whiteouts.sh) as `debug1`, boot once with the SD, wait ~20 s, power off, check `debug1.log`, then boot **without** the SD. The script removes only the 10 whiteouts and prints MD5 checks of the now visible files.
+
 ---
 
 ## 5. Rebuilding with other images
