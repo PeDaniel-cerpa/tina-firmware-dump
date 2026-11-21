@@ -25,8 +25,8 @@ Resultado:
 
 ```text
 mtdblock2_custom.bin
-MD5:      4c2936a8c8b81c75a9274f332f975f1d
-SHA256:   5496e4b6e470668f87644db25b9af2fb66ab250d8f19767b2ee71e99901d383a
+MD5:      88a9d4a56d1f9f11e67ab1029926909b
+SHA256:   28a89c0c73b06f8c05035853391cd52de8fbf31cee04fa4cabc2c35ba7573861
 Tamaño:   13.303.808 bytes
 ```
 
@@ -68,10 +68,10 @@ Log esperado:
 
 ```text
 [debug1] guardando rootfs original en /mnt/extsd/mtdblock2_original_backup.bin
-[debug1] MD5 SD   : 4c2936a8c8b81c75a9274f332f975f1d
-[debug1] MD5 /tmp : 4c2936a8c8b81c75a9274f332f975f1d
+[debug1] MD5 SD   : 88a9d4a56d1f9f11e67ab1029926909b
+[debug1] MD5 /tmp : 88a9d4a56d1f9f11e67ab1029926909b
 [debug1] grabando mtdblock2 (13303808 bytes)
-[debug1] MD5 leido   : 4c2936a8c8b81c75a9274f332f975f1d
+[debug1] MD5 leido   : 88a9d4a56d1f9f11e67ab1029926909b
 [debug1] ROOTFS GRABADO Y VERIFICADO
 [debug1] APAGA Y ENCIENDE para usar el rootfs nuevo
 ```
@@ -116,7 +116,7 @@ mksquashfs m750root mtdblock2_custom.bin \
 truncate -s 13303808 mtdblock2_custom.bin
 python3 - <<'PY'
 p='mtdblock2_custom.bin'
-b=open(p,'r+b'); b.seek(11827086); b.write(b'\xff'*(13303808-11827086)); b.close()
+b=open(p,'r+b'); b.seek(12033501); b.write(b'\xff'*(13303808-12033501)); b.close()
 PY
 ```
 

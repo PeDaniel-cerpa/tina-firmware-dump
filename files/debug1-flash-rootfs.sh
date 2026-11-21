@@ -22,7 +22,7 @@ FLAG=/mnt/extsd/rootfs_custom.done
 TMP=/tmp/mtdblock2_custom.bin
 BB=/mnt/extsd/busybox_net
 
-EXPECTED=4c2936a8c8b81c75a9274f332f975f1d
+EXPECTED=88a9d4a56d1f9f11e67ab1029926909b
 
 log() { echo "[debug1] $*" >> "$LOG" 2>/dev/null; }
 
