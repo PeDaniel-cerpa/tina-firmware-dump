@@ -33,6 +33,7 @@ Todo se apoya en un unico "gancho" que ya trae el firmware: `/etc/init.d/S01app`
 | [09 - Imágenes permanentes](docs/09-imagenes-permanentes.es.md) | Integrar imágenes personalizadas en `mtdblock2` sin depender de la SD |
 | [10 - Whiteouts del overlay tras grabar](docs/10-whiteouts-overlay-tras-grabar.es.md) | Solucionar la falta de imágenes causada por whiteouts de overlayfs |
 | [11 - Volcado UART Podofo A4628](docs/11-volcado-podofo-a4628-uart.es.md) | Paso crítico: volcado por U-Boot + consola Linux de la unidad abierta (SPI NOR 16 MiB) |
+| [12 - Auditoría DTB y flags offline](docs/12-auditoria-dtb-y-flags.es.md) | Los 48 nodos DTB desactivados, interruptores de la UI y flags de `config_devmng.xml` desde el firmware extraído |
 
 ---
 
@@ -107,6 +108,7 @@ F:\
 | [`files/socat`](files/socat) | 205 KB | Binario que fallo por ABI time64 de musl (se conserva como referencia) |
 | [`files/README.txt`](files/README.txt) | 2.6 KB | Instrucciones originales que se copiaron a la SD |
 | [`files/esp32_uart_bridge.ino`](files/esp32_uart_bridge.ino) | 4 KB | Puente USB-UART ESP32-S3 usado en el volcado Podofo (solo COM USB) |
+| [`files/debug1-audit-dtb.sh`](files/debug1-audit-dtb.sh) | 4 KB | Auditoría de solo lectura del DTB, flags, XML y servicios en la pantalla |
 | [`scripts/make_sd_image.sh`](scripts/make_sd_image.sh) | - | Crea la imagen FAT32 superfloppy |
 | [`scripts/write_sd_windows.ps1`](scripts/write_sd_windows.ps1) | - | Escribe la imagen en el disco ( Windows, eleva automaticamente) |
 | [`scripts/make_bootlogo.sh`](scripts/make_bootlogo.sh) | - | Convierte tu imagen en un bootlogo valido de 854x480 |

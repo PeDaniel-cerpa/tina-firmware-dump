@@ -46,6 +46,7 @@ A practical, hardware-tested guide that uses an existing boot hook in `/etc/init
 | [09 - Permanent custom images](docs/09-permanent-custom-images.md) | Bake custom images into `mtdblock2` so no SD is needed |
 | [10 - Overlay whiteouts after flash](docs/10-overlay-whiteouts-after-flash.md) | Fix missing images caused by overlayfs whiteouts after flashing |
 | [11 - Podofo A4628 UART dump](docs/11-podofo-a4628-uart-dump.md) | Critical baseline: U-Boot + Linux console dump of the opened unit (16 MiB SPI NOR) |
+| [12 - Offline DTB and flags audit](docs/12-offline-dtb-and-flags-audit.md) | All 48 disabled DTB nodes, UI switches and `config_devmng.xml` flags, analysed from the extracted firmware |
 
 ---
 
@@ -120,6 +121,7 @@ F:\
 | [`files/socat`](files/socat) | 205 KB | Binary that failed due to musl time64 ABI (kept as reference) |
 | [`files/README.txt`](files/README.txt) | 2.6 KB | Original instructions copied to the SD |
 | [`files/esp32_uart_bridge.ino`](files/esp32_uart_bridge.ino) | 4 KB | Sanitized ESP32-S3 USB-UART bridge used for the Podofo dump (USB COM only) |
+| [`files/debug1-audit-dtb.sh`](files/debug1-audit-dtb.sh) | 4 KB | Read-only audit of the DTB, flags, XML and services from the live screen |
 | [`scripts/make_sd_image.sh`](scripts/make_sd_image.sh) | - | Creates the FAT32 superfloppy image |
 | [`scripts/write_sd_windows.ps1`](scripts/write_sd_windows.ps1) | - | Writes the image to disk (Windows, self-elevating) |
 | [`scripts/make_bootlogo.sh`](scripts/make_bootlogo.sh) | - | Converts your image into a valid 854x480 bootlogo |
