@@ -90,6 +90,7 @@ F:\
 | Archivo | Tamano | Funcion |
 |---|---|---|
 | [`files/debug1`](files/debug1) | 2 KB | Script principal: vuelca MTD, copia configuracion y levanta telnetd |
+| [`files/debug1-bootlogo.sh`](files/debug1-bootlogo.sh) | 4 KB | Igual, pero graba `bootlogo.bin` desde la SD automaticamente |
 | [`files/busybox_net`](files/busybox_net) | 1.1 MB | BusyBox 1.31 estatico ARMv7 con applet `telnetd` |
 | [`files/debug1-v1-socat.sh`](files/debug1-v1-socat.sh) | 2 KB | Version original (intento con socat, **no funciona**: ver doc 04) |
 | [`files/socat`](files/socat) | 205 KB | Binario que fallo por ABI time64 de musl (se conserva como referencia) |

@@ -102,6 +102,26 @@ md5sum /tmp/bootlogo.bin /dev/mtd_name/bootlogo
 
 También puedes usar `/dev/mtdblock5` directamente si `/dev/mtd_name/bootlogo` no existe (lo crea `S00part` al arrancar).
 
+### 2.3b Alternativa: hacerlo solo con la SD (sin teclado)
+
+Si no puedes escribir en la terminal, usa [`files/debug1-bootlogo.sh`](../files/debug1-bootlogo.sh) en lugar de los comandos interactivos:
+
+1. Copia `debug1-bootlogo.sh` a la raiz de la SD **con el nombre exacto `debug1`** (guarda antes tu `debug1` actual).
+2. Asegurate de que `bootlogo.bin` tambien este en la raiz de la SD.
+3. Apaga, inserta la SD y enciende. Espera 40-60 segundos.
+4. Apaga, lleva la SD al PC y lee `F:\debug1.log`.
+5. El script crea `F:\bootlogo.done` solo cuando el MD5 coincide. Borra ese archivo para volver a grabar.
+
+Lineas esperadas en el log:
+
+```text
+[debug1] grabando bootlogo en /dev/mtd_name/bootlogo (131072 bytes)
+[debug1] MD5 esperado: 5d7c...
+[debug1] MD5 leido   : 5d7c...
+[debug1] BOOTLOGO GRABADO Y VERIFICADO
+[debug1] creado /mnt/extsd/bootlogo.done
+```
+
 ### 2.4 Reiniciar y comprobar
 
 ```sh
