@@ -7,12 +7,14 @@
 A practical, hardware-tested guide that uses an existing boot hook in `/etc/init.d/S01app` to run a script from a microSD as root. The script dumps all MTD partitions, copies `/etc`, `/overlay` and `/data`, and starts a root telnet shell reachable over WiFi/Ethernet.
 
 > **Verified on real hardware:** TF811 (v837s, 64 MB RAM) and M750 (v853, 128 MB RAM). Both produced a full 16 MB / 8-partition firmware dump plus configuration data.
+>
+> **Origin of the research:** the firmware analysed here was first obtained from an opened Podofo A4628 over UART/U-Boot before the no-teardown method was developed. That critical baseline is documented in [doc 11](docs/11-podofo-a4628-uart-dump.md).
 
 ---
 
 ## Keywords
 
-`allwinner` `tina linux` `openwrt` `firmware dump` `firmware extraction` `firmware backup` `carplay screen` `carplay display` `android head unit` `car stereo` `root shell` `telnetd` `busybox` `mtd` `nand flash` `mtdblock` `embedded linux` `reverse engineering` `armv7` `armhf` `musl` `fat32` `superfloppy` `sd card` `adb alternative` `no teardown` `v853` `v837s` `sun8iw21p1` `TF811` `M750` `uboot` `squashfs` `overlayfs` `shell over IP` `Tera Term`
+`allwinner` `tina linux` `openwrt` `firmware dump` `firmware extraction` `firmware backup` `carplay screen` `carplay display` `android head unit` `car stereo` `root shell` `telnetd` `busybox` `mtd` `nand flash` `mtdblock` `embedded linux` `reverse engineering` `armv7` `armhf` `musl` `fat32` `superfloppy` `sd card` `adb alternative` `no teardown` `v853` `v837s` `sun8iw21p1` `TF811` `M750` `uboot` `squashfs` `overlayfs` `shell over IP` `Tera Term` `Podofo A4628` `UART` `ESP32-S3` `SPI NOR` `U-Boot console`
 
 ---
 
@@ -43,6 +45,7 @@ A practical, hardware-tested guide that uses an existing boot hook in `/etc/init
 | [08 - Change UI colours](docs/08-change-ui-colors.md) | Turn the green menu red, including `image.bin.lzma` and the GPS sequence |
 | [09 - Permanent custom images](docs/09-permanent-custom-images.md) | Bake custom images into `mtdblock2` so no SD is needed |
 | [10 - Overlay whiteouts after flash](docs/10-overlay-whiteouts-after-flash.md) | Fix missing images caused by overlayfs whiteouts after flashing |
+| [11 - Podofo A4628 UART dump](docs/11-podofo-a4628-uart-dump.md) | Critical baseline: U-Boot + Linux console dump of the opened unit (16 MiB SPI NOR) |
 
 ---
 

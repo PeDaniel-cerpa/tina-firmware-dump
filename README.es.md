@@ -7,12 +7,14 @@ Guia practica, probada en hardware real, para **obtener una shell root por IP y 
 Todo se apoya en un unico "gancho" que ya trae el firmware: `/etc/init.d/S01app` ejecuta `/mnt/extsd/debug1` como root si ese archivo existe en la microSD.
 
 > **Estado:** metodo verificado en dos pantallas reales (modelos **TF811** y **M750**). Ambas producen un volcado completo de 8 particiones MTD (16 MB) mas `/etc`, `/overlay` y `/data`.
+>
+> **Origen de la investigacion:** el firmware analizado se obtuvo primero de una Podofo A4628 abierta por UART/U-Boot, antes de desarrollar el metodo sin desarmar. Ese paso critico esta documentado en la [doc 11](docs/11-volcado-podofo-a4628-uart.es.md).
 
 ---
 
 ## Palabras clave
 
-`allwinner` `tina linux` `openwrt` `volcado de firmware` `extraccion de firmware` `copiar firmware` `pantalla carplay` `carplay` `autorradio android` `shell root` `telnetd` `busybox` `mtd` `nand flash` `mtdblock` `linux embebido` `ingenieria inversa` `armv7` `armhf` `musl` `fat32` `superfloppy` `tarjeta SD` `alternativa ADB` `sin desarmar` `v853` `v837s` `sun8iw21p1` `TF811` `M750` `uboot` `squashfs` `overlayfs` `shell por IP` `Tera Term`
+`allwinner` `tina linux` `openwrt` `volcado de firmware` `extraccion de firmware` `copiar firmware` `pantalla carplay` `carplay` `autorradio android` `shell root` `telnetd` `busybox` `mtd` `nand flash` `mtdblock` `linux embebido` `ingenieria inversa` `armv7` `armhf` `musl` `fat32` `superfloppy` `tarjeta SD` `alternativa ADB` `sin desarmar` `v853` `v837s` `sun8iw21p1` `TF811` `M750` `uboot` `squashfs` `overlayfs` `shell por IP` `Tera Term` `Podofo A4628` `UART` `ESP32-S3` `SPI NOR` `consola U-Boot`
 
 ---
 
@@ -30,6 +32,7 @@ Todo se apoya en un unico "gancho" que ya trae el firmware: `/etc/init.d/S01app`
 | [08 - Cambiar colores de la interfaz](docs/08-cambiar-colores-interfaz.es.md) | Pasar el menú verde a rojo, incluido `image.bin.lzma` y la secuencia GPS |
 | [09 - Imágenes permanentes](docs/09-imagenes-permanentes.es.md) | Integrar imágenes personalizadas en `mtdblock2` sin depender de la SD |
 | [10 - Whiteouts del overlay tras grabar](docs/10-whiteouts-overlay-tras-grabar.es.md) | Solucionar la falta de imágenes causada por whiteouts de overlayfs |
+| [11 - Volcado UART Podofo A4628](docs/11-volcado-podofo-a4628-uart.es.md) | Paso crítico: volcado por U-Boot + consola Linux de la unidad abierta (SPI NOR 16 MiB) |
 
 ---
 
