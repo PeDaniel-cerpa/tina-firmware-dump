@@ -119,6 +119,7 @@ F:\
 | [`files/debug1-v1-socat.sh`](files/debug1-v1-socat.sh) | 2 KB | Original version (socat attempt, **does not work**: see doc 04) |
 | [`files/socat`](files/socat) | 205 KB | Binary that failed due to musl time64 ABI (kept as reference) |
 | [`files/README.txt`](files/README.txt) | 2.6 KB | Original instructions copied to the SD |
+| [`files/esp32_uart_bridge.ino`](files/esp32_uart_bridge.ino) | 4 KB | Sanitized ESP32-S3 USB-UART bridge used for the Podofo dump (USB COM only) |
 | [`scripts/make_sd_image.sh`](scripts/make_sd_image.sh) | - | Creates the FAT32 superfloppy image |
 | [`scripts/write_sd_windows.ps1`](scripts/write_sd_windows.ps1) | - | Writes the image to disk (Windows, self-elevating) |
 | [`scripts/make_bootlogo.sh`](scripts/make_bootlogo.sh) | - | Converts your image into a valid 854x480 bootlogo |

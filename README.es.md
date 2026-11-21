@@ -106,6 +106,7 @@ F:\
 | [`files/debug1-v1-socat.sh`](files/debug1-v1-socat.sh) | 2 KB | Version original (intento con socat, **no funciona**: ver doc 04) |
 | [`files/socat`](files/socat) | 205 KB | Binario que fallo por ABI time64 de musl (se conserva como referencia) |
 | [`files/README.txt`](files/README.txt) | 2.6 KB | Instrucciones originales que se copiaron a la SD |
+| [`files/esp32_uart_bridge.ino`](files/esp32_uart_bridge.ino) | 4 KB | Puente USB-UART ESP32-S3 usado en el volcado Podofo (solo COM USB) |
 | [`scripts/make_sd_image.sh`](scripts/make_sd_image.sh) | - | Crea la imagen FAT32 superfloppy |
 | [`scripts/write_sd_windows.ps1`](scripts/write_sd_windows.ps1) | - | Escribe la imagen en el disco ( Windows, eleva automaticamente) |
 | [`scripts/make_bootlogo.sh`](scripts/make_bootlogo.sh) | - | Convierte tu imagen en un bootlogo valido de 854x480 |

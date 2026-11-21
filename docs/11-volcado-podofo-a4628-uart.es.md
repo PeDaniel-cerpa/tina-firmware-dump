@@ -78,48 +78,174 @@ Un sketch del ESP32-S3 midió el ancho de cada pulso con el contador de ciclos d
 
 Un primer intento con `micros()` dio un valor falso de 500000 por estar en el límite de resolución del temporizador.
 
-### 3.3 Puente USB-UART con el ESP32-S3
+### 3.3 Puente USB-UART con el ESP32-S3 (sketch real usado)
 
-Sketch mínimo (ESP32S3 Dev Module, **USB CDC On Boot: Enabled**, puerto USB nativo):
+Placa: **ESP32S3 Dev Module**, **USB CDC On Boot: Enabled**, puerto USB nativo (COM). Las credenciales WiFi se sustituyeron por marcadores de posición.
+
+> **IMPORTANTE: usar solo el puerto serie USB (COM).** La parte WiFi/Telnet se conserva como referencia, pero **no funcionó de forma fiable**: Tera Term conectaba a la IP del ESP en el puerto 23, sin embargo los comandos escritos en el terminal no se mostraban (eco) ni llegaban correctamente a la consola. Todos los comandos de este volcado se enviaron por el COM de USB. No usar WiFi para este procedimiento.
 
 ```cpp
-#define PIN_RX 18
-#define PIN_TX 17
+// Puente USB (COM) <-> UART para ESP32-S3 N16R8
+// Pantalla TX -> GPIO18 (RX del ESP)
+// ESP GPIO17 (TX) -> RX de la pantalla (con 1k en serie)
+// GND del ESP -> GND de la pantalla
+//
+// SOLO USB SERIE (COM). El modo WiFi/Telnet se conserva como referencia, pero
+// no funciono: Tera Term conectaba por WiFi, no mostraba los comandos
+// escritos y la consola no respondia de forma fiable. Usar siempre el COM.
+//
+// IMPORTANTE: sustituir los valores de WiFi SOLO si se quiere experimentar.
+// No son las credenciales reales y no son necesarias para el volcado.
+
+#include <WiFi.h>
+
+// --- CONFIGURACION WIFI (NO USAR; solo referencia) ---
+const char* ssid     = "TU_WIFI_SSID";
+const char* password = "TU_WIFI_PASSWORD";
+const uint16_t PUERTO_TCP = 23;
+
+WiFiServer server(PUERTO_TCP);
+WiFiClient client;
+
+#define PIN_RX   18
+#define PIN_TX   17
+#define PIN_BOOT 0
+
+const unsigned long BAUDS[] = {115200, 921600, 1500000, 57600, 230400, 9600};
+const int N_BAUDS = sizeof(BAUDS) / sizeof(BAUDS[0]);
+int idx = 0;                      // 115200 por defecto
 uint8_t buf[512];
+bool autoStopUboot = true;        // se apaga al recibir cualquier tecla desde el PC
+
+void abrirUart() {
+  Serial1.end();
+  Serial1.setRxBufferSize(16384);
+  Serial1.begin(BAUDS[idx], SERIAL_8N1, PIN_RX, PIN_TX);
+}
+
+void logDual(const char* msg) {
+  Serial.print(msg);
+  if (client && client.connected()) client.print(msg);
+}
 
 void setup() {
   Serial.begin(115200);
-  Serial1.setRxBufferSize(16384);
-  Serial1.begin(115200, SERIAL_8N1, PIN_RX, PIN_TX);
+  pinMode(PIN_BOOT, INPUT_PULLUP);
+  abrirUart();
+
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(ssid, password);
+  unsigned long inicio = millis();
+  while (WiFi.status() != WL_CONNECTED && millis() - inicio < 15000) delay(250);
+  if (WiFi.status() == WL_CONNECTED) {
+    server.begin();
+    server.setNoDelay(true);
+  }
 }
 
 void loop() {
+  static bool conectadoUSB = false;
+  if (Serial && !conectadoUSB) {
+    conectadoUSB = true;
+    delay(200);
+    Serial.printf("\r\n[UART a %lu baudios - AutoStop U-Boot ACTIVO]\r\n", BAUDS[idx]);
+    if (WiFi.status() == WL_CONNECTED)
+      Serial.printf("[WiFi LISTO -> %s:%d] (NO USAR: solo COM)\r\n",
+                    WiFi.localIP().toString().c_str(), PUERTO_TCP);
+    else
+      Serial.println("[WiFi ERROR -> no se pudo conectar; usar COM]");
+  }
+  if (!Serial) conectadoUSB = false;
+
+  if (server.hasClient()) {
+    if (!client || !client.connected()) {
+      if (client) client.stop();
+      client = server.available();
+      client.setNoDelay(true);
+      client.printf("\r\n[Conectado por WiFi | UART a %lu baudios | AutoStop: %s]\r\n",
+                    BAUDS[idx], autoStopUboot ? "ACTIVO" : "DETENIDO");
+    } else {
+      WiFiClient rechazo = server.available();
+      rechazo.println("\r\n[Ocupado: ya hay otra sesion conectada]");
+      rechazo.stop();
+    }
+  }
+
+  // Ráfaga cada 10 ms para atrapar U-Boot antes de "Starting kernel"
+  static unsigned long tBurst = 0;
+  if (autoStopUboot && (millis() - tBurst >= 10)) {
+    Serial1.write(' ');
+    tBurst = millis();
+  }
+
+  // UART -> PC (USB y WiFi)
   int n = Serial1.available();
-  if (n > 0) { n = Serial1.readBytes(buf, min(n, (int)sizeof(buf))); Serial.write(buf, n); }
+  if (n > 0) {
+    n = Serial1.readBytes(buf, min(n, (int)sizeof(buf)));
+    Serial.write(buf, n);
+    if (client && client.connected()) client.write(buf, n);
+  }
+
+  // PC (USB) -> UART
   n = Serial.available();
-  if (n > 0) { n = Serial.readBytes(buf, min(n, (int)sizeof(buf))); Serial1.write(buf, n); }
+  if (n > 0) {
+    if (autoStopUboot) {
+      autoStopUboot = false;
+      logDual("\r\n[AutoStop detenido - Consola libre]\r\n");
+    }
+    n = Serial.readBytes(buf, min(n, (int)sizeof(buf)));
+    Serial1.write(buf, n);
+  }
+
+  // PC (WiFi) -> UART (solo referencia)
+  if (client && client.connected()) {
+    n = client.available();
+    if (n > 0) {
+      if (autoStopUboot) {
+        autoStopUboot = false;
+        logDual("\r\n[AutoStop detenido - Consola libre]\r\n");
+      }
+      n = client.read(buf, min(n, (int)sizeof(buf)));
+      Serial1.write(buf, n);
+    }
+  }
+
+  // BOOT: cambiar velocidad con pulsación larga (1,5 s)
+  static unsigned long tPress = 0;
+  static bool cambiado = false;
+  if (digitalRead(PIN_BOOT) == LOW) {
+    if (tPress == 0) tPress = millis();
+    if (!cambiado && millis() - tPress >= 1500) {
+      cambiado = true;
+      idx = (idx + 1) % N_BAUDS;
+      abrirUart();
+      char msg[64];
+      snprintf(msg, sizeof(msg), "\r\n[UART a %lu baudios]\r\n", BAUDS[idx]);
+      logDual(msg);
+    }
+  } else {
+    tPress = 0;
+    cambiado = false;
+  }
 }
 ```
+
+El sketch sanitizado también está disponible como [`files/esp32_uart_bridge.ino`](../files/esp32_uart_bridge.ino).
 
 Notas:
 
 - En Tera Term: **Serial port**, **Flow control: none**. DTR/RTS pueden arrastrar GPIO0 (BOOT) y cambiar la velocidad si el sketch la cambia con el botón.
 - Abrir el terminal antes de encender la pantalla para capturar todo el log de arranque.
 - Activar el log a archivo en el terminal.
+- El sketch imprime `[UART a 115200 baudios - AutoStop U-Boot ACTIVO]` al abrir el USB.
 
 ### 3.4 Entrar a la consola de U-Boot
 
-1. Con el puerto serie abierto, cortar y volver a conectar la alimentación.
-2. Interrumpir el autoboot con una **ráfaga de teclas** mediante *Broadcast command* de Tera Term: el entorno tiene `bootdelay=0` y no hay margen manual.
+1. Con el puerto COM de USB abierto en Tera Term, cortar y volver a conectar la alimentación.
+2. El sketch envía un espacio cada **10 ms** (`autoStopUboot`) hasta que llega la primera tecla desde el PC. Esa ráfaga interrumpe el autoboot aunque `bootdelay=0`. En cuanto escribes el primer carácter, AutoStop se apaga y la consola queda libre.
 3. Aparece el prompt `=>`. Comandos de solo lectura: `help`, `printenv`, `bdinfo`.
 
-**Lo que funcionó en Tera Term:**
-
-1. Menú *Control → Broadcast command*.
-2. Escribir una ráfaga, por ejemplo `ssssssssssssssss`.
-3. Configuración: Enter key = Enter, fin de línea CR, History activado, *Send to this process only* activado, **Realtime mode desactivado**.
-4. Al conectar la alimentación de la pantalla, pulsar **Submit** para que las teclas lleguen durante la ventana de autoboot.
-5. Si el sistema arranca normalmente, cortar la alimentación y repetir.
+Alternativa sin el sketch de ráfaga: *Control → Broadcast command* de Tera Term con una ráfaga como `ssssssssssssssss`, Enter key = Enter, fin de línea CR, History activado, *Send to this process only* activado, **Realtime mode desactivado**, y pulsar **Submit** al conectar la alimentación. Si el sistema arranca normalmente, cortar y repetir.
 
 Datos relevantes de `printenv`:
 
@@ -234,6 +360,7 @@ binwalk podofo_full.bin
 | `mount: Resource busy` | Tarjeta ya montada | Revisar `cat /proc/mounts` |
 | Comandos pegados que salen cortados | La consola serie trunca líneas largas | Escribir un comando por línea |
 | Tera Term cambió la velocidad del puente | DTR/RTS tocaron el pin BOOT | Flow control: none; pulsación larga para cambiar velocidad |
+| Tera Term conecta por WiFi pero no muestra ni hace eco de los comandos escritos | El puente WiFi/Telnet del ESP no es fiable para la consola | **Usar solo el puerto COM de USB**; WiFi queda como referencia |
 
 ---
 
