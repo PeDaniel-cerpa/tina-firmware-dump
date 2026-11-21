@@ -73,6 +73,8 @@ stat -c%s bootlogo.bin
 # 131072
 ```
 
+> For wide/banner images (e.g. 1921x700) use [`scripts/make_bootlogo_fill.sh`](../scripts/make_bootlogo_fill.sh) instead: it center-crops to fill 854x480 instead of adding black bars.
+
 > If your JPEG exceeds 128 KB, lower the quality: `-q:v 4` for ffmpeg or `-quality 80` for convert.
 
 ### 2.2 Copy to the SD

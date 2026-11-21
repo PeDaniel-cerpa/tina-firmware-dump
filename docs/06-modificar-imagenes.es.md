@@ -73,6 +73,8 @@ stat -c%s bootlogo.bin
 # 131072
 ```
 
+> Para imagenes panoramicas (p. ej. 1921x700) usa [`scripts/make_bootlogo_fill.sh`](../scripts/make_bootlogo_fill.sh): recorta el centro para llenar 854x480 en vez de anadir barras negras.
+
 > Si tu JPEG supera los 128 KB, baja la calidad: `-q:v 4` en ffmpeg o `-quality 80` en convert.
 
 ### 2.2 Copiar a la SD
