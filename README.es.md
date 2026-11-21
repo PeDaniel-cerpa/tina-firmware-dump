@@ -28,6 +28,7 @@ Todo se apoya en un unico "gancho" que ya trae el firmware: `/etc/init.d/S01app`
 | [06 - Modificar imagenes](docs/06-modificar-imagenes.es.md) | Cambiar el logo de arranque, fondos e iconos |
 | [07 - Opciones desactivadas](docs/07-opciones-desactivadas.es.md) | Servicios desactivados, binarios ausentes, flags XML y nodos DTB |
 | [08 - Cambiar colores de la interfaz](docs/08-cambiar-colores-interfaz.es.md) | Pasar el menú verde a rojo, incluido `image.bin.lzma` y la secuencia GPS |
+| [09 - Imágenes permanentes](docs/09-imagenes-permanentes.es.md) | Integrar imágenes personalizadas en `mtdblock2` sin depender de la SD |
 
 ---
 
@@ -95,6 +96,7 @@ F:\
 | [`files/debug1-bootlogo.sh`](files/debug1-bootlogo.sh) | 4 KB | Igual, pero graba `bootlogo.bin` desde la SD automaticamente |
 | [`files/debug1-wifi-ssid.sh`](files/debug1-wifi-ssid.sh) | 4 KB | Cambia el SSID del AP desde `param.bin` + XML usando la SD |
 | [`files/debug1-ui-red.sh`](files/debug1-ui-red.sh) | 3 KB | Aplica el tema rojo de la interfaz desde la SD |
+| [`files/debug1-flash-rootfs.sh`](files/debug1-flash-rootfs.sh) | 3 KB | Graba un rootfs con imágenes personalizadas y verifica MD5 |
 | [`files/busybox_net`](files/busybox_net) | 1.1 MB | BusyBox 1.31 estatico ARMv7 con applet `telnetd` |
 | [`files/debug1-v1-socat.sh`](files/debug1-v1-socat.sh) | 2 KB | Version original (intento con socat, **no funciona**: ver doc 04) |
 | [`files/socat`](files/socat) | 205 KB | Binario que fallo por ABI time64 de musl (se conserva como referencia) |

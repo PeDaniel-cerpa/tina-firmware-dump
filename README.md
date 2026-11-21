@@ -41,6 +41,7 @@ A practical, hardware-tested guide that uses an existing boot hook in `/etc/init
 | [06 - Modifying images](docs/06-modify-images.md) | Change the boot logo, backgrounds and icons |
 | [07 - Disabled features](docs/07-disabled-features.md) | Disabled services, missing binaries, XML flags and DTB nodes |
 | [08 - Change UI colours](docs/08-change-ui-colors.md) | Turn the green menu red, including `image.bin.lzma` and the GPS sequence |
+| [09 - Permanent custom images](docs/09-permanent-custom-images.md) | Bake custom images into `mtdblock2` so no SD is needed |
 
 ---
 
@@ -108,6 +109,7 @@ F:\
 | [`files/debug1-bootlogo.sh`](files/debug1-bootlogo.sh) | 4 KB | Same, plus flashes `bootlogo.bin` from the SD automatically |
 | [`files/debug1-wifi-ssid.sh`](files/debug1-wifi-ssid.sh) | 4 KB | Changes the AP SSID from `param.bin` + XML from the SD |
 | [`files/debug1-ui-red.sh`](files/debug1-ui-red.sh) | 3 KB | Applies the red UI theme from the SD |
+| [`files/debug1-flash-rootfs.sh`](files/debug1-flash-rootfs.sh) | 3 KB | Flashes a rootfs with custom images and verifies MD5 |
 | [`files/busybox_net`](files/busybox_net) | 1.1 MB | Static ARMv7 BusyBox 1.31 with `telnetd` applet |
 | [`files/debug1-v1-socat.sh`](files/debug1-v1-socat.sh) | 2 KB | Original version (socat attempt, **does not work**: see doc 04) |
 | [`files/socat`](files/socat) | 205 KB | Binary that failed due to musl time64 ABI (kept as reference) |
