@@ -1,6 +1,8 @@
 # 05 - Analisis de las dos pantallas
 
-[English](05-screen-analysis.en.md) · [Volver](../README.md)
+[English](05-screen-analysis.md) · [Volver](../README.es.md)
+
+**Keywords:** comparativa TF811 vs M750, v837s v853 allwinner, panel LCD R0H RX, calibracion de camara, RAM 64MB 128MB, compatibilidad de firmware
 
 Se aplico el procedimiento a **dos pantallas fisicas distintas**. Este documento recoge las diferencias reales encontradas en los volcados y sirve para no mezclar firmwares.
 

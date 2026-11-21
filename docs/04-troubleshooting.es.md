@@ -1,6 +1,8 @@
 # 04 - Solucion de problemas
 
-[English](04-troubleshooting.en.md) · [Volver](../README.md)
+[English](04-troubleshooting.md) · [Volver](../README.es.md)
+
+**Keywords:** solucion de problemas volcado firmware, symbol not found time64, acceso denegado disco, diskpart medios extraibles, wsl mount, CRLF, symlinks FAT32, connection timeout
 
 Todos los problemas que aparecieron durante el desarrollo del metodo, con el diagnostico y la solucion real aplicada. Si algo falla, busca aqui primero.
 
@@ -18,7 +20,7 @@ mount -t vfat /dev/mmcblk0 /mnt/extsd 2>/dev/null   # disco entero -> FALLA
 if [ -f /mnt/extsd/debug1 ]; then ... fi             # nunca se cumple
 ```
 
-**Solucion:** convertir la SD en FAT32 superfloppy (sin tabla de particiones). Ver [Fase 2](02-procedimiento.md#fase-2---crear-la-sd-superfloppy-fat32-sin-tabla-de-particiones).
+**Solucion:** convertir la SD en FAT32 superfloppy (sin tabla de particiones). Ver [Fase 2](02-procedure.es.md#fase-2---crear-la-sd-superfloppy-fat32-sin-tabla-de-particiones).
 
 **Como confirmar la causa:** el log de la SD no existe. Si el log existe pero no hay shell, salta al problema 4.
 

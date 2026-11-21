@@ -1,6 +1,8 @@
 # 02 - Full procedure
 
-[Español](02-procedimiento.md) · [Back](../README.en.md)
+[Español](02-procedure.es.md) · [Back](../README.md)
+
+**Keywords:** firmware dump tutorial, microSD FAT32 superfloppy, static IP 192.168.10.250, Tera Term, telnet port 23, MTD dd dump, root shell, no teardown
 
 Step by step, from zero to the firmware on your PC. Estimated time: 15-25 minutes.
 

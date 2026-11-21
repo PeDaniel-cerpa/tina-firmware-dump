@@ -1,6 +1,8 @@
 # 02 - Procedimiento completo
 
-[English](02-procedure.en.md) · [Volver](../README.md)
+[English](02-procedure.md) · [Volver](../README.es.md)
+
+**Keywords:** tutorial volcado de firmware, microSD FAT32 superfloppy, IP fija 192.168.10.250, Tera Term, telnet puerto 23, volcado MTD con dd, shell root, sin desarmar
 
 Paso a paso, desde cero hasta tener el firmware en el PC. Tiempo estimado: 15-25 minutos.
 

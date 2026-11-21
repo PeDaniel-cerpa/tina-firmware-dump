@@ -1,59 +1,78 @@
-# Volcado de firmware de pantallas Allwinner / Tina Linux sin desarmar
+# Allwinner / Tina Linux Firmware Dump — root shell over IP without disassembly
 
-[English](README.en.md) · [Procedimiento completo](docs/02-procedimiento.md) · [Solución de problemas](docs/04-solucion-problemas.md)
+[Español](README.es.md)
 
-Guia practica, probada en hardware real, para **obtener una shell root por IP y copiar el firmware completo** de una pantalla CarPlay basada en Allwinner con Tina Linux (OpenWrt), **sin desarmar el equipo y sin regrabar la flash**.
+**Extract the complete firmware from an Allwinner CarPlay screen / Android head unit running Tina Linux (OpenWrt) — no teardown, no reflashing, no serial cable.**
 
-Todo se apoya en un unico "gancho" que ya trae el firmware: `/etc/init.d/S01app` ejecuta `/mnt/extsd/debug1` como root si ese archivo existe en la microSD.
+A practical, hardware-tested guide that uses an existing boot hook in `/etc/init.d/S01app` to run a script from a microSD as root. The script dumps all MTD partitions, copies `/etc`, `/overlay` and `/data`, and starts a root telnet shell reachable over WiFi/Ethernet.
 
-> **Estado:** metodo verificado en dos pantallas reales (modelos **TF811** y **M750**). Ambas producen un volcado completo de 8 particiones MTD (16 MB) mas `/etc`, `/overlay` y `/data`.
+> **Verified on real hardware:** TF811 (v837s, 64 MB RAM) and M750 (v853, 128 MB RAM). Both produced a full 16 MB / 8-partition firmware dump plus configuration data.
 
 ---
 
-## Indice
+## Keywords
 
-| Documento | Contenido |
+`allwinner` `tina linux` `openwrt` `firmware dump` `firmware extraction` `firmware backup` `carplay screen` `carplay display` `android head unit` `car stereo` `root shell` `telnetd` `busybox` `mtd` `nand flash` `mtdblock` `embedded linux` `reverse engineering` `armv7` `armhf` `musl` `fat32` `superfloppy` `sd card` `adb alternative` `no teardown` `v853` `v837s` `sun8iw21p1` `TF811` `M750` `uboot` `squashfs` `overlayfs` `shell over IP` `Tera Term`
+
+---
+
+## What this repository solves
+
+| Problem | Solution in this repo |
 |---|---|
-| [01 - Investigacion](docs/01-investigacion.md) | Que se encontro en el firmware y POR QUE funciona el metodo |
-| [02 - Procedimiento](docs/02-procedimiento.md) | Paso a paso, desde cero hasta el volcado en el PC |
-| [03 - Archivos](docs/03-archivos.md) | Los archivos usados, que hacen y de donde salieron |
-| [04 - Solucion de problemas](docs/04-solucion-problemas.md) | Todos los fallos encontrados y como se resolvieron |
-| [05 - Analisis de las dos pantallas](docs/05-analisis-pantallas.md) | TF811 vs M750: diferencias y advertencias |
+| No `sshd`, `dropbear` or `telnetd` in the firmware | Static BusyBox `telnetd` supplied from the SD |
+| ADB disabled (`adbd` missing, `S50adb` exits) | Boot-time root hook instead of USB |
+| Firmware mounts `/dev/mmcblk0`, not `mmcblk0p1` | FAT32 **superfloppy** SD (no MBR) |
+| `socat` fails with `__*_time64: symbol not found` | Static ARM BusyBox, zero library dependencies |
+| Windows denies raw disk writes | `FSCTL_DISMOUNT_VOLUME` before writing |
+| WSL2 cannot reach `192.168.10.x` | Tera Term / native Windows `nc` |
 
 ---
 
-## Resumen rapido
+## Contents
 
-### 1. Preparar la microSD
+| Document | Description |
+|---|---|
+| [01 - Research](docs/01-investigation.md) | What was found in the firmware and WHY this works |
+| [02 - Full procedure](docs/02-procedure.md) | Step by step, from zero to dump on the PC |
+| [03 - Files](docs/03-files.md) | The files used, what they do and where they came from |
+| [04 - Troubleshooting](docs/04-troubleshooting.md) | Every failure encountered and how it was fixed |
+| [05 - Screen comparison](docs/05-screen-analysis.md) | TF811 vs M750: differences and warnings |
 
-La SD **no puede ser MBR con particion**. Debe ser **FAT32 "superfloppy"** (sistema de archivos directo en el disco, sin tabla de particiones). Esto es obligatorio porque el firmware monta `/dev/mmcblk0` (disco entero), no `/dev/mmcblk0p1`.
+---
+
+## Quick start
+
+### 1. Prepare the microSD
+
+The card **cannot be MBR with a partition**. It must be **FAT32 superfloppy** (filesystem directly on the disk, no partition table). This is mandatory because the firmware mounts `/dev/mmcblk0` (whole disk), not `/dev/mmcblk0p1`.
 
 ```bash
-# Linux (requiere mkfs.fat y mtools)
+# Linux (requires mkfs.fat and mtools)
 ./scripts/make_sd_image.sh firmware_dump.img
 ```
 
 ```powershell
-# Windows (PowerShell como Administrador)
+# Windows (PowerShell as Administrator)
 .\scripts\write_sd_windows.ps1 -ImagePath .\firmware_dump.img -DiskNumber 1 -DriveLetter F
 ```
 
-Resultado:
+Result:
 
 ```
 F:\
-├── debug1          <- script, se ejecuta como root al arrancar
-└── busybox_net     <- BusyBox estatico ARM con telnetd
+├── debug1          <- script, executed as root at boot
+└── busybox_net     <- static ARM BusyBox with telnetd
 ```
 
-### 2. Arrancar la pantalla
+### 2. Boot the screen
 
-1. Apaga la pantalla, inserta la SD y enciendela.
-2. Espera 30-40 segundos.
-3. Conecta el PC al WiFi de la pantalla (`TF811-xxxx` o `M750-xxxx`, clave `12345678`).
-4. Pon IP fija en el PC: `192.168.10.250`, mascara `255.255.255.0`, gateway `192.168.10.1`.
+1. Power off, insert the SD and power on.
+2. Wait 30-40 seconds.
+3. Connect the PC to the screen's WiFi (`TF811-xxxx` or `M750-xxxx`, password `12345678`).
+4. Set a static IP on the PC: `192.168.10.250`, mask `255.255.255.0`, gateway `192.168.10.1`.
 
-### 3. Conectar y recoger
+### 3. Connect and collect
 
 ```text
 Tera Term -> New connection -> TCP/IP
@@ -61,16 +80,16 @@ Host: 192.168.10.1
 Port: 23
 ```
 
-No pide password: entra directo en un prompt root. Si la IP no es esa, mirala en `firmware_dump/info.txt` (seccion `ifconfig`).
+No password is requested: it drops straight into a root prompt. If that IP is wrong, check `firmware_dump/info.txt` (section `ifconfig`).
 
-Al sacar la SD:
+After removing the SD:
 
 ```
 F:\
 ├── debug1.log
 └── firmware_dump\
     ├── info.txt
-    ├── mtdblock0.bin ... mtdblock7.bin    <- EL FIRMWARE COMPLETO
+    ├── mtdblock0.bin ... mtdblock7.bin    <- THE COMPLETE FIRMWARE
     ├── etc\
     ├── overlay\
     └── data\
@@ -78,55 +97,39 @@ F:\
 
 ---
 
-## Archivos incluidos
+## Included files
 
-| Archivo | Tamano | Funcion |
+| File | Size | Purpose |
 |---|---|---|
-| [`files/debug1`](files/debug1) | 2 KB | Script principal: vuelca MTD, copia configuracion y levanta telnetd |
-| [`files/busybox_net`](files/busybox_net) | 1.1 MB | BusyBox 1.31 estatico ARMv7 con applet `telnetd` |
-| [`files/debug1-v1-socat.sh`](files/debug1-v1-socat.sh) | 2 KB | Version original (intento con socat, **no funciona**: ver doc 04) |
-| [`files/socat`](files/socat) | 205 KB | Binario que fallo por ABI time64 de musl (se conserva como referencia) |
-| [`files/README.txt`](files/README.txt) | 2.6 KB | Instrucciones originales que se copiaron a la SD |
-| [`scripts/make_sd_image.sh`](scripts/make_sd_image.sh) | - | Crea la imagen FAT32 superfloppy |
-| [`scripts/write_sd_windows.ps1`](scripts/write_sd_windows.ps1) | - | Escribe la imagen en el disco ( Windows, eleva automaticamente) |
+| [`files/debug1`](files/debug1) | 2 KB | Main script: dumps MTD, copies config and starts telnetd |
+| [`files/busybox_net`](files/busybox_net) | 1.1 MB | Static ARMv7 BusyBox 1.31 with `telnetd` applet |
+| [`files/debug1-v1-socat.sh`](files/debug1-v1-socat.sh) | 2 KB | Original version (socat attempt, **does not work**: see doc 04) |
+| [`files/socat`](files/socat) | 205 KB | Binary that failed due to musl time64 ABI (kept as reference) |
+| [`files/README.txt`](files/README.txt) | 2.6 KB | Original instructions copied to the SD |
+| [`scripts/make_sd_image.sh`](scripts/make_sd_image.sh) | - | Creates the FAT32 superfloppy image |
+| [`scripts/write_sd_windows.ps1`](scripts/write_sd_windows.ps1) | - | Writes the image to disk (Windows, self-elevating) |
 
-Checksums SHA256 y URLs de origen: [docs/03-archivos.md](docs/03-archivos.md).
+SHA256 checksums and upstream URLs: [docs/03-files.md](docs/03-files.md).
 
-Tambien se incluyen logs **reales** de una ejecucion correcta en [`examples/`](examples/), utiles para comparar si algo sale mal:
+Real logs from a successful run are included in [`examples/`](examples/), useful for comparison if something goes wrong:
 
 ```text
-examples/debug1-M750.log    <- log de ejecucion del script
+examples/debug1-M750.log    <- script execution log
 examples/info-M750.txt      <- CMDLINE, /proc/mtd, ifconfig, route, mounts
 ```
 
-> Antes de subir el repo, revisa `examples/info-M750.txt`: contiene datos del equipo (MAC, cmdline). Si no quieres publicarlos, sustituye el archivo por una version anonimizada.
+> Before publishing a fork, review `examples/info-M750.txt`: it contains device data (MAC, cmdline). Replace it with an anonymized version if needed.
 
 ---
 
-## Por que no funcionan los metodos obvios
+## Warning
 
-| Metodo | Resultado |
-|---|---|
-| `sshd` / `dropbear` | No estan en el rootfs |
-| `telnetd` del firmware | El busybox incluido no lo compila |
-| `tftp` / `nc` del firmware | No disponibles |
-| ADB | `adbd` no existe; `S50adb` tiene `exit` al inicio |
-| WSL -> `nc 192.168.10.1` | WSL2 va por NAT, no alcanza esa red (usar Tera Term desde Windows) |
-| `socat` de OpenWrt 23.05 | Falla: `__nanosleep_time64: symbol not found` (musl time64) |
-| SD en MBR/FAT32 normal | El hook nunca se ejecuta: el firmware monta `/dev/mmcblk0`, no la particion |
+This method is **read-only and diagnostic**. It does not modify the device's flash.
 
-Detalle completo en [docs/04-solucion-problemas.md](docs/04-solucion-problemas.md).
+The two models analyzed (**TF811** with `v837s`/64 MB and **M750** with `v853`/128 MB) **are not interchangeable**: different SoC, RAM, panel and camera calibration. Do not flash one device's firmware onto the other. See [docs/05-screen-analysis.md](docs/05-screen-analysis.md).
 
 ---
 
-## Advertencia importante
+## License
 
-Este metodo es **de lectura y diagnostico**. No modifica la flash del equipo.
-
-Los dos modelos analizados (**TF811** con chip `v837s`/64 MB y **M750** con chip `v853`/128 MB) **no son intercambiables**: distinto SoC, distinta RAM, distinto panel y distinta calibracion de camara. No flashees el firmware de uno en el otro. Ver [docs/05-analisis-pantallas.md](docs/05-analisis-pantallas.md).
-
----
-
-## Licencia
-
-MIT. Los binarios de terceros (BusyBox, socat) conservan sus propias licencias; se incluyen unicamente como herramientas de diagnostico.
+MIT. Third-party binaries (BusyBox, socat) keep their own licenses; they are included solely as diagnostic tools.

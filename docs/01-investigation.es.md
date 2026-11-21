@@ -1,6 +1,8 @@
 # 01 - Investigacion del firmware
 
-[English](01-investigation.en.md) · [Volver](../README.md)
+[English](01-investigation.md) · [Volver](../README.es.md)
+
+**Keywords:** allwinner, tina linux, openwrt, investigacion de firmware, hook de arranque, S01app, mmcblk0, superfloppy, FAT32, musl time64, busybox telnetd, ingenieria inversa
 
 Esta es la fase de analisis que explica **por que** funciona el metodo. No hace falta repetirla para usar el procedimiento, pero ayuda a adaptarlo a otros modelos.
 

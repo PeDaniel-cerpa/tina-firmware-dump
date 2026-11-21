@@ -1,6 +1,8 @@
 # 01 - Firmware research
 
-[Español](01-investigacion.md) · [Back](../README.en.md)
+[Español](01-investigation.es.md) · [Back](../README.md)
+
+**Keywords:** allwinner, tina linux, openwrt, firmware research, boot hook, S01app, mmcblk0, superfloppy, FAT32, musl time64, busybox telnetd, reverse engineering
 
 This is the analysis phase that explains **why** the method works. You do not need to repeat it to use the procedure, but it helps when adapting it to other models.
 

@@ -1,6 +1,8 @@
 # 04 - Troubleshooting
 
-[Español](04-solucion-problemas.md) · [Back](../README.en.md)
+[Español](04-troubleshooting.es.md) · [Back](../README.md)
+
+**Keywords:** firmware dump troubleshooting, symbol not found time64, access denied raw disk, diskpart removable media, wsl mount, CRLF, FAT32 symlinks, connection timeout
 
 Every problem encountered while developing the method, with the diagnosis and the fix actually applied. If something fails, look here first.
 
@@ -18,7 +20,7 @@ mount -t vfat /dev/mmcblk0 /mnt/extsd 2>/dev/null   # whole disk -> FAILS
 if [ -f /mnt/extsd/debug1 ]; then ... fi             # never matches
 ```
 
-**Fix:** convert the SD to FAT32 superfloppy (no partition table). See [Phase 2](02-procedure.en.md#phase-2---create-the-superfloppy-sd-fat32-without-partition-table).
+**Fix:** convert the SD to FAT32 superfloppy (no partition table). See [Phase 2](02-procedure.md#phase-2---create-the-superfloppy-sd-fat32-without-partition-table).
 
 **How to confirm:** there is no log at all. If a log exists but there is no shell, jump to problem 4.
 

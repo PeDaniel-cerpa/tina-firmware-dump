@@ -1,6 +1,8 @@
 # 03 - Archivos utilizados
 
-[English](03-files.en.md) · [Volver](../README.md)
+[English](03-files.md) · [Volver](../README.es.md)
+
+**Keywords:** script debug1, busybox_net, telnetd estatico ARM, socat, checksums SHA256, OpenWrt, Alpine, musl time64, herramientas firmware
 
 Inventario completo de cada archivo que se uso en el procedimiento, su funcion, origen y checksum.
 
