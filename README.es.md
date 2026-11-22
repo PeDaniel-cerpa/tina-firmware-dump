@@ -37,6 +37,7 @@ Todo se apoya en un unico "gancho" que ya trae el firmware: `/etc/init.d/S01app`
 | [13 - Opciones ocultas de la UI](docs/13-opciones-ocultas-ui.es.md) | 30 ajustes comentados, controles ocultos, flags de la app y panel de fábrica/depuración |
 | [14 - Módulo GPS esperado](docs/14-modulo-gps-esperado.es.md) | GPS NMEA 0183 UART a 9600 en PE6/PE7; cableado y bloqueos de software |
 | [15 - GPS por Bluetooth con ESP32](docs/15-gps-por-bluetooth-con-esp32.es.md) | Por qué SPP no funciona y alternativas del ESP32 por UART a ttyS0/ttyS1 |
+| [16 - Tamaño máximo de `hm_bg`](docs/16-limites-tamano-hm-bg.es.md) | JPEG suelto vs entrada BGRA empaquetada, 1,27 MB libres en mtdblock2, 320 KB en overlay |
 
 ---
 

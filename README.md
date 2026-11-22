@@ -50,6 +50,7 @@ A practical, hardware-tested guide that uses an existing boot hook in `/etc/init
 | [13 - Hidden UI options](docs/13-hidden-ui-options.md) | 30 commented settings items, hidden in-page controls, app flags and factory/debug overlay |
 | [14 - Expected GPS module](docs/14-expected-gps-module.md) | NMEA 0183 UART GPS at 9600 baud on PE6/PE7; wiring and software blockers |
 | [15 - Bluetooth GPS with ESP32](docs/15-bluetooth-gps-with-esp32.md) | Why SPP is not supported, and working ESP32 UART alternatives to ttyS0/ttyS1 |
+| [16 - Maximum `hm_bg` size](docs/16-hm-bg-size-limits.md) | Loose JPEG vs packed BGRA entry, 1.27 MB free in mtdblock2, 320 KB overlay limit |
 
 ---
 
