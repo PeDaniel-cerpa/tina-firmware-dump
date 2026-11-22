@@ -38,6 +38,7 @@ Todo se apoya en un unico "gancho" que ya trae el firmware: `/etc/init.d/S01app`
 | [14 - Módulo GPS esperado](docs/14-modulo-gps-esperado.es.md) | GPS NMEA 0183 UART a 9600 en PE6/PE7; cableado y bloqueos de software |
 | [15 - GPS por Bluetooth con ESP32](docs/15-gps-por-bluetooth-con-esp32.es.md) | Por qué SPP no funciona y alternativas del ESP32 por UART a ttyS0/ttyS1 |
 | [16 - Tamaño máximo de `hm_bg`](docs/16-limites-tamano-hm-bg.es.md) | JPEG suelto vs entrada BGRA empaquetada, 1,27 MB libres en mtdblock2, 320 KB en overlay |
+| [17 - Aplicar fondo `Untitled-1.jpg`](docs/17-aplicar-fondo-untitled.es.md) | Reconstrucción con la imagen nueva de 854x480, entrada BGRA parcheada y carpeta SD lista |
 
 ---
 
