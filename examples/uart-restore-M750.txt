@@ -1,0 +1,89 @@
+M750 - recuperacion NOR por UART/U-Boot
+----------------------------------------
+Sesion real, sanitizada. 115200 8N1, GND comun.
+SD FAT32 superfloppy con dump_completo.bin (16777216 bytes,
+MD5 8c0abbd6e0f327e5d9ab38146a90f5ca) en la raiz.
+
+=> printenv
+boot_normal=sunxi_flash read 44800000 ${boot_partition};bootm 44800000
+boot_partition=boot
+bootcmd=run setargs_nor boot_normal
+nor_root=/dev/mtdblock2
+partitions=boot@mtdblock1:rootfs@mtdblock2:rootfs_data@mtdblock3:env@mtdblock4:bootlogo@mtdblock5:private@mtdblock6:UDISK@mtdblock7
+uboot_message=2018.07-g7572878-dirty(06/15/2026-06:26:11)
+Environment size: 2482/131068 bytes
+
+=> sf probe 0
+sf: bus-0 cs-0 spedd-50000000Hz mode-3000
+SF: Detected py25q128ha(IO DTR) with page size 256 Bytes, erase size 64 KiB, total 16 MiB
+py25q128ha reg3 =0x0
+
+=> bdinfo
+DRAM bank   = 0x00000000
+-> start    = 0x40000000
+-> size     = 0x08000000
+baudrate    = 115200 bps
+
+=> mmcinfo
+curr_device:-1
+No MMC device available
+
+=> sunxi_card0_probe
+[mmc]: SUNXI SDMMC Controller Version:0x50400
+curr_device:0
+Device: SUNXI SD/MMC
+Name: APPSD
+Bus Speed: 50000000
+Mode : SD High Speed (50MHz)
+Capacity: 3.8 GiB
+Bus Width: 4-bit
+
+=> fatls mmc 0
+            System Volume Information/
+  16777216   dump_completo.bin
+1 file(s), 1 dir(s)
+
+=> fatload mmc 0 0x42000000 dump_completo.bin
+ERROR: reserving fdt memory region failed (addr=48000000 size=400000)
+ERROR: reserving fdt memory region failed (addr=47000000 size=40000)
+ERROR: reserving fdt memory region failed (addr=47040000 size=20000)
+ERROR: reserving fdt memory region failed (addr=47060000 size=20000)
+16777216 bytes read in 757 ms (21.1 MiB/s)
+
+=> sf probe 0
+sf: bus-0 cs-0 spedd-50000000Hz mode-3000
+SF: Detected py25q128ha(IO DTR) with page size 256 Bytes, erase size 64 KiB, total 16 MiB
+
+=> sf erase 0x10000 0xff0000
+SF: 16711680 bytes @ 0x10000 Erased: OK
+
+=> sf write 0x42010000 0x10000 0xff0000
+device 0 offset 0x10000, size 0xff0000
+SF: 16711680 bytes @ 0x10000 time:17073 ms Written: OK
+
+=> sf erase 0 0x10000
+SF: 65536 bytes @ 0x0 Erased: OK
+
+=> sf write 0x42000000 0 0x10000
+device 0 offset 0x0, size 0x10000
+SF: 65536 bytes @ 0x0 time:59 ms Written: OK
+
+=> sf read 0x43000000 0 0x1000000
+device 0 whole chip
+rx wait_dma_recv_over fail
+SF: 16777216 bytes @ 0x0 time:5005 ms Read: ERROR -1
+
+=> crc32 0x43000000 0x1000000
+CRC32 for 43000000 ... 43ffffff ==> 6f3b4103    (no confiar: lectura DMA fallida)
+
+=> sf read 0x43000000 0 0x10000
+device 0 offset 0x0, size 0x10000
+rx wait_dma_recv_over fail
+SF: 65536 bytes @ 0x0 time:5003 ms Read: ERROR -1
+
+=> crc32 0x43000000 0x10000
+CRC32 for 43000000 ... 4300ffff ==> 5560ecb6    (correcto: boot0 del dump)
+
+=> reset
+
+Resultado: volvio el bootlogo y la M750 entro al home correctamente.

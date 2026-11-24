@@ -8,13 +8,15 @@ Todo se apoya en un unico "gancho" que ya trae el firmware: `/etc/init.d/S01app`
 
 > **Estado:** metodo verificado en dos pantallas reales (modelos **TF811** y **M750**). Ambas producen un volcado completo de 8 particiones MTD (16 MB) mas `/etc`, `/overlay` y `/data`.
 >
+> **Correccion 2026-11-24:** la M750 lleva fisicamente un **V553** (familia `sun50i`/Cortex-A53); el string `v853-perf1` del firmware es solo el target de compilacion. La recuperacion final se hizo por UART con el dump de la propia placa y termino en home: [doc 18](docs/18-recuperacion-m750-por-uart.es.md).
+>
 > **Origen de la investigacion:** el firmware analizado se obtuvo primero de una Podofo A4628 abierta por UART/U-Boot, antes de desarrollar el metodo sin desarmar. Ese paso critico esta documentado en la [doc 11](docs/11-volcado-podofo-a4628-uart.es.md).
 
 ---
 
 ## Palabras clave
 
-`allwinner` `tina linux` `openwrt` `volcado de firmware` `extraccion de firmware` `copiar firmware` `pantalla carplay` `carplay` `autorradio android` `shell root` `telnetd` `busybox` `mtd` `nand flash` `mtdblock` `linux embebido` `ingenieria inversa` `armv7` `armhf` `musl` `fat32` `superfloppy` `tarjeta SD` `alternativa ADB` `sin desarmar` `v853` `v837s` `sun8iw21p1` `TF811` `M750` `uboot` `squashfs` `overlayfs` `shell por IP` `Tera Term` `Podofo A4628` `UART` `ESP32-S3` `SPI NOR` `consola U-Boot`
+`allwinner` `tina linux` `openwrt` `volcado de firmware` `extraccion de firmware` `copiar firmware` `pantalla carplay` `carplay` `autorradio android` `shell root` `telnetd` `busybox` `mtd` `nand flash` `mtdblock` `linux embebido` `ingenieria inversa` `armv7` `armhf` `musl` `fat32` `superfloppy` `tarjeta SD` `alternativa ADB` `sin desarmar` `v853` `v837s` `v553` `v533` `sun8iw21p1` `sun50i` `TF811` `M750` `uboot` `squashfs` `overlayfs` `shell por IP` `Tera Term` `Podofo A4628` `UART` `ESP32-S3` `SPI NOR` `consola U-Boot` `PhoenixCard` `sf probe` `fatload` `recuperacion NOR`
 
 ---
 
@@ -39,6 +41,7 @@ Todo se apoya en un unico "gancho" que ya trae el firmware: `/etc/init.d/S01app`
 | [15 - GPS por Bluetooth con ESP32](docs/15-gps-por-bluetooth-con-esp32.es.md) | Por qué SPP no funciona y alternativas del ESP32 por UART a ttyS0/ttyS1 |
 | [16 - Tamaño máximo de `hm_bg`](docs/16-limites-tamano-hm-bg.es.md) | JPEG suelto vs entrada BGRA empaquetada, 1,27 MB libres en mtdblock2, 320 KB en overlay |
 | [17 - Aplicar fondo `Untitled-1.jpg`](docs/17-aplicar-fondo-untitled.es.md) | Reconstrucción con la imagen nueva de 854x480, entrada BGRA parcheada y carpeta SD lista |
+| [18 - Recuperación M750 por UART](docs/18-recuperacion-m750-por-uart.es.md) | Caso real resuelto: por qué falló PhoenixCard, cómo se grabó el NOR con `sf` y cómo volvió el home |
 
 ---
 
@@ -144,6 +147,7 @@ examples/info-M750.txt      <- CMDLINE, /proc/mtd, ifconfig, route, mounts
 | WSL -> `nc 192.168.10.1` | WSL2 va por NAT, no alcanza esa red (usar Tera Term desde Windows) |
 | `socat` de OpenWrt 23.05 | Falla: `__nanosleep_time64: symbol not found` (musl time64) |
 | SD en MBR/FAT32 normal | El hook nunca se ejecuta: el firmware monta `/dev/mmcblk0`, no la particion |
+| Imagen PhoenixCard V853 en la M750 (V553 fisico) | Quema en Startup pero no arranca: boot0 de otra arquitectura; ver doc 18 |
 
 Detalle completo en [docs/04-troubleshooting.es.md](docs/04-troubleshooting.es.md).
 
@@ -153,7 +157,7 @@ Detalle completo en [docs/04-troubleshooting.es.md](docs/04-troubleshooting.es.m
 
 Este metodo es **de lectura y diagnostico**. No modifica la flash del equipo.
 
-Los dos modelos analizados (**TF811** con chip `v837s`/64 MB y **M750** con chip `v853`/128 MB) **no son intercambiables**: distinto SoC, distinta RAM, distinto panel y distinta calibracion de camara. No flashees el firmware de uno en el otro. Ver [docs/05-screen-analysis.es.md](docs/05-screen-analysis.es.md).
+Los dos modelos analizados (**TF811** con target `v837s`/64 MB y **M750** con **chip físico V553**/128 MB, aunque el firmware diga `v853`) **no son intercambiables**: distinto SoC, distinta RAM, distinto panel y distinta calibracion de camara. No flashees el firmware de uno en el otro. Ver [docs/05-screen-analysis.es.md](docs/05-screen-analysis.es.md) y la recuperación real de la [doc 18](docs/18-recuperacion-m750-por-uart.es.md).
 
 ---
 

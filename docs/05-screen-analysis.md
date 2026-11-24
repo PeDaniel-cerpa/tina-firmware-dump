@@ -103,11 +103,13 @@ The scripts in `etc/firmware/` manage the WiFi modes (AP, station, direct, MAC, 
 
 ## Which is "better"
 
+> **Correction 2026-11-24:** the chip row was written from the firmware string `v853-perf1`. Opening the board showed the M750 physically contains a **V553** (`sun50i`/Cortex-A53 family). Technically the V553 is better for UI/general use (4x A53 + Mali-T720) than a V853 (Cortex-A7 + NPU); V853S only wins at vision/AI. They are still **not interchangeable**. See [doc 18](18-m750-uart-recovery.md).
+
 **The M750 (screen 2) is superior in specifications:**
 
 | Criterion | Winner |
 |---|---|
-| `v853` chip (newer, with NPU) vs `v837s` | M750 |
+| Chip (string `v853-perf1`, physical **V553**) vs `v837s` | M750 |
 | 128 MB RAM vs 64 MB | M750 |
 | DRAM 648 MHz vs 528 MHz | M750 |
 | U-Boot Jun 2026 vs Jan 2026 | M750 |
@@ -122,7 +124,7 @@ The scripts in `etc/firmware/` manage the WiFi modes (AP, station, direct, MAC, 
 
 Although they share kernel 4.9.191 and 854x480 resolution, **do not flash one screen's firmware onto the other**:
 
-- Different SoC (`v837s` vs `v853`) -> different DTB and `sys_config.fex`
+- Different SoC (`v837s` vs `v853` in firmware, **V553** physical in the M750) -> different DTB and `sys_config.fex`
 - Different RAM size (64 vs 128 MB) -> different memory configuration
 - Different panel (`R0H` vs `RX`) -> different initialization and display calibration
 - Different camera calibration (`Nx 2025-02-27` vs `Nx 2025-07-04`)

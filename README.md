@@ -6,7 +6,9 @@
 
 A practical, hardware-tested guide that uses an existing boot hook in `/etc/init.d/S01app` to run a script from a microSD as root. The script dumps all MTD partitions, copies `/etc`, `/overlay` and `/data`, and starts a root telnet shell reachable over WiFi/Ethernet.
 
-> **Verified on real hardware:** TF811 (v837s, 64 MB RAM) and M750 (v853, 128 MB RAM). Both produced a full 16 MB / 8-partition firmware dump plus configuration data.
+> **Verified on real hardware:** TF811 (v837s, 64 MB RAM) and M750 (128 MB RAM). Both produced a full 16 MB / 8-partition firmware dump plus configuration data.
+>
+> **Correction 2026-11-24:** the M750 physically contains a **V553** (`sun50i`/Cortex-A53 family); the `v853-perf1` string in the firmware is only the build target. The final recovery was done over UART with the board's own dump and ended in the home screen: [doc 18](docs/18-m750-uart-recovery.md).
 >
 > **Origin of the research:** the firmware analysed here was first obtained from an opened Podofo A4628 over UART/U-Boot before the no-teardown method was developed. That critical baseline is documented in [doc 11](docs/11-podofo-a4628-uart-dump.md).
 
@@ -14,7 +16,7 @@ A practical, hardware-tested guide that uses an existing boot hook in `/etc/init
 
 ## Keywords
 
-`allwinner` `tina linux` `openwrt` `firmware dump` `firmware extraction` `firmware backup` `carplay screen` `carplay display` `android head unit` `car stereo` `root shell` `telnetd` `busybox` `mtd` `nand flash` `mtdblock` `embedded linux` `reverse engineering` `armv7` `armhf` `musl` `fat32` `superfloppy` `sd card` `adb alternative` `no teardown` `v853` `v837s` `sun8iw21p1` `TF811` `M750` `uboot` `squashfs` `overlayfs` `shell over IP` `Tera Term` `Podofo A4628` `UART` `ESP32-S3` `SPI NOR` `U-Boot console`
+`allwinner` `tina linux` `openwrt` `firmware dump` `firmware extraction` `firmware backup` `carplay screen` `carplay display` `android head unit` `car stereo` `root shell` `telnetd` `busybox` `mtd` `nand flash` `mtdblock` `embedded linux` `reverse engineering` `armv7` `armhf` `musl` `fat32` `superfloppy` `sd card` `adb alternative` `no teardown` `v853` `v837s` `v553` `v533` `sun8iw21p1` `sun50i` `TF811` `M750` `uboot` `squashfs` `overlayfs` `shell over IP` `Tera Term` `Podofo A4628` `UART` `ESP32-S3` `SPI NOR` `U-Boot console` `PhoenixCard` `sf probe` `fatload` `NOR recovery`
 
 ---
 
@@ -28,6 +30,7 @@ A practical, hardware-tested guide that uses an existing boot hook in `/etc/init
 | `socat` fails with `__*_time64: symbol not found` | Static ARM BusyBox, zero library dependencies |
 | Windows denies raw disk writes | `FSCTL_DISMOUNT_VOLUME` before writing |
 | WSL2 cannot reach `192.168.10.x` | Tera Term / native Windows `nc` |
+| V853 PhoenixCard image burned into the M750 (physical V553) | Burns in Startup but never boots: wrong-SoC boot0; see doc 18 |
 
 ---
 
@@ -52,6 +55,7 @@ A practical, hardware-tested guide that uses an existing boot hook in `/etc/init
 | [15 - Bluetooth GPS with ESP32](docs/15-bluetooth-gps-with-esp32.md) | Why SPP is not supported, and working ESP32 UART alternatives to ttyS0/ttyS1 |
 | [16 - Maximum `hm_bg` size](docs/16-hm-bg-size-limits.md) | Loose JPEG vs packed BGRA entry, 1.27 MB free in mtdblock2, 320 KB overlay limit |
 | [17 - Apply `Untitled-1.jpg` background](docs/17-apply-untitled-background.md) | Rebuild with the new 854x480 image, patched BGRA entry and ready SD folder |
+| [18 - M750 recovery over UART](docs/18-m750-uart-recovery.md) | Real solved case: why PhoenixCard failed, how the NOR was flashed with `sf`, and how home came back |
 
 ---
 
@@ -150,7 +154,7 @@ examples/info-M750.txt      <- CMDLINE, /proc/mtd, ifconfig, route, mounts
 
 This method is **read-only and diagnostic**. It does not modify the device's flash.
 
-The two models analyzed (**TF811** with `v837s`/64 MB and **M750** with `v853`/128 MB) **are not interchangeable**: different SoC, RAM, panel and camera calibration. Do not flash one device's firmware onto the other. See [docs/05-screen-analysis.md](docs/05-screen-analysis.md).
+The two models analyzed (**TF811** with target `v837s`/64 MB and **M750** with a **physical V553**/128 MB, even though the firmware says `v853`) **are not interchangeable**: different SoC, RAM, panel and camera calibration. Do not flash one device's firmware onto the other. See [docs/05-screen-analysis.md](docs/05-screen-analysis.md) and the real recovery in [doc 18](docs/18-m750-uart-recovery.md).
 
 ---
 
