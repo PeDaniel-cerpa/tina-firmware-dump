@@ -56,6 +56,7 @@ A practical, hardware-tested guide that uses an existing boot hook in `/etc/init
 | [16 - Maximum `hm_bg` size](docs/16-hm-bg-size-limits.md) | Loose JPEG vs packed BGRA entry, 1.27 MB free in mtdblock2, 320 KB overlay limit |
 | [17 - Apply `Untitled-1.jpg` background](docs/17-apply-untitled-background.md) | Rebuild with the new 854x480 image, patched BGRA entry and ready SD folder |
 | [18 - M750 recovery over UART](docs/18-m750-uart-recovery.md) | Real solved case: why PhoenixCard failed, how the NOR was flashed with `sf`, and how home came back |
+| [19 - Final M750 UI over SD with `debug1`](docs/19-m750-sd-only-debug.md) | Pre-TPMS design plus the brightness/home widget gap fix, flashed from SD only |
 
 ---
 

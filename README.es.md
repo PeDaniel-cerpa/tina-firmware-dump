@@ -42,6 +42,7 @@ Todo se apoya en un unico "gancho" que ya trae el firmware: `/etc/init.d/S01app`
 | [16 - Tamaño máximo de `hm_bg`](docs/16-limites-tamano-hm-bg.es.md) | JPEG suelto vs entrada BGRA empaquetada, 1,27 MB libres en mtdblock2, 320 KB en overlay |
 | [17 - Aplicar fondo `Untitled-1.jpg`](docs/17-aplicar-fondo-untitled.es.md) | Reconstrucción con la imagen nueva de 854x480, entrada BGRA parcheada y carpeta SD lista |
 | [18 - Recuperación M750 por UART](docs/18-recuperacion-m750-por-uart.es.md) | Caso real resuelto: por qué falló PhoenixCard, cómo se grabó el NOR con `sf` y cómo volvió el home |
+| [19 - UI final M750 por SD con `debug1`](docs/19-ui-final-m750-por-sd.es.md) | Diseño previo al widget TPMS + fix del hueco en brillo/home, grabado solo con SD |
 
 ---
 
